@@ -703,6 +703,8 @@ deployments:
 
 # Compound III
 
+## TEST INFO
+
 ## Introduction
 
 [Compound III](https://github.com/compound-finance/comet){:target="_blank"} is an EVM compatible protocol that enables supplying of crypto assets as collateral in order to borrow the *base asset*. Accounts can also earn interest by supplying the base asset to the protocol.
