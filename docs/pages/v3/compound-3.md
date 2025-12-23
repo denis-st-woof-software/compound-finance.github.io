@@ -232,7 +232,7 @@ deployments:
       wrsETH: '0x87eEE96D50Fb761AD85B1c982d28A042169d61b1'
   Unichain - USDC Base:
     tab_text: Unichain USDC
-    blockscan_origin: 'https://uniscan.io/'
+    blockscan_origin: 'https://uniscan.xyz/'
     contracts:
       cUSDCv3: '0x2c7118c4C88B9841FCF839074c26Ae8f035f2921'
       cUSDCv3 Implementation: '0x6bAD2334e987106F40c50c7942d794b4E09EdFC5'
@@ -249,7 +249,7 @@ deployments:
       WETH: '0x4200000000000000000000000000000000000006'
   Unichain - WETH Base:
     tab_text: Unichain WETH
-    blockscan_origin: 'https://uniscan.io/'
+    blockscan_origin: 'https://uniscan.xyz/'
     contracts:
       cWETHv3: '0x6C987dDE50dB1dcDd32Cd4175778C2a291978E2a'
       cWETHv3 Implementation: '0x51515144Cff7DC3623C52C5e91768a9955d2BEb1'
