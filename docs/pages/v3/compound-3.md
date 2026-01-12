@@ -12,7 +12,6 @@ sidebar_nav_data:
   developer-resources: Developer Resources
   security: Security
 
-data_collected_at: '2026-01-12'
 deployments:
   Ethereum Mainnet - USDC Base:
     tab_text: Mainnet USDC
