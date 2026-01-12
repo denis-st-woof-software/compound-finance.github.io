@@ -222,6 +222,11 @@
           const [ contractName, contractAddress ] = contracts[j];
           const tbody = table.children[0];
 
+          // Handle both string addresses and nested objects (for tokens with additional fields)
+          const address = typeof contractAddress === 'string' 
+            ? contractAddress 
+            : (contractAddress && contractAddress.address ? contractAddress.address : contractAddress);
+
           const row = document.createElement('tr');
           const cell1 = document.createElement('td');
           cell1.innerText = contractName;
@@ -231,16 +236,16 @@
           const link = copyLinkTemplate.content.cloneNode(true);
 
           const cell2 = document.createElement('td');
-          cell2.innerText = contractAddress;
+          cell2.innerText = address;
           row.appendChild(cell2);
 
           const cell3 = document.createElement('td');
-          button.children[0].children[0].dataset.copyText = contractAddress;
+          button.children[0].children[0].dataset.copyText = address;
           cell3.appendChild(button);
           row.appendChild(cell3);
 
           const cell4 = document.createElement('td');
-          link.children[0].children[0].href = blockscanOrigin + 'address/' + contractAddress;
+          link.children[0].children[0].href = blockscanOrigin + 'address/' + address;
           cell4.appendChild(link);
           row.appendChild(cell4);
 
