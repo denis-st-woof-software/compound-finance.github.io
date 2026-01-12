@@ -12,13 +12,14 @@ sidebar_nav_data:
   developer-resources: Developer Resources
   security: Security
 
+data_collected_at: '2026-01-12'
 deployments:
   Ethereum Mainnet - USDC Base:
     tab_text: Mainnet USDC
     blockscan_origin: 'https://etherscan.io/'
     contracts:
       cUSDCv3: '0xc3d688B66703497DAA19211EEdff47f25384cdc3'
-      cUSDCv3 Implementation: '0xEEB860216B1ea7E3aB80fE5Fc1886dAEf6bDc440'
+      cUSDCv3 Implementation: '0xEb330B7c1622E0F8b18a7dD1decc27Cf3d980E61'
       cUSDCv3 Ext: '0xA70a0227028aD005F4Fc9376a82cd1462e3AAedC'
       Configurator: '0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3'
       Configurator Implementation: '0xcFC1fA6b7ca982176529899D99af6473aD80DF4F'
@@ -70,7 +71,7 @@ deployments:
     blockscan_origin: 'https://etherscan.io/'
     contracts:
       cUSDTv3: '0x3Afdc9BCA9213A35503b077a6072F3D0d5AB0840'
-      cUSDTv3 Implementation: '0xdd922B4a799B5066902e325300069226F95C7988'
+      cUSDTv3 Implementation: '0xDF6899894e0A3Dbf703d843618Ee6075B6C1634D'
       cUSDTv3 Ext: '0xe3458a0BdBd5A413d3731595C5Eb7C4CD6a14DD1'
       Configurator: '0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3'
       Configurator Implementation: '0xcFC1fA6b7ca982176529899D99af6473aD80DF4F'
@@ -367,7 +368,7 @@ deployments:
     blockscan_origin: 'https://basescan.org/'
     contracts:
       cAEROv3: '0x784efeB622244d2348d4F2522f8860B96fbEcE89'
-      cAEROv3 Implementation: '0xEcEf3dCEdAC5769FBA941452A8E49780d5A031aA'
+      cAEROv3 Implementation: '0x0f99Db1dbF8559C2D1Cf99983076F04262e42BCA'
       cAEROv3 Ext: '0xDd18688Bb75Af704f3Fb1183e459C4d4D41132D9'
       Configurator: '0x45939657d1CA34A8FA39A924B71D28Fe8431e581'
       Configurator Implementation: '0x83E0F742cAcBE66349E3701B171eE2487a26e738'
@@ -403,7 +404,7 @@ deployments:
     blockscan_origin: 'https://basescan.org/'
     contracts:
       cUSDCv3: '0xb125E6687d4313864e53df431d5425969c15Eb2F'
-      cUSDCv3 Implementation: '0xd84933745943Df8EDC45Ff0f0ef7BD55324A22b6'
+      cUSDCv3 Implementation: '0x89e9b098bb0e3d09f4288fb2b9632B4dcB40bBF6'
       cUSDCv3 Ext: '0x220Da2686dC870aC0A97498A1845e610d2f13431'
       Configurator: '0x45939657d1CA34A8FA39A924B71D28Fe8431e581'
       Configurator Implementation: '0x83E0F742cAcBE66349E3701B171eE2487a26e738'
@@ -423,7 +424,7 @@ deployments:
     blockscan_origin: 'https://basescan.org/'
     contracts:
       cUSDSv3: '0x2c776041CCFe903071AF44aa147368a9c8EEA518'
-      cUSDSv3 Implementation: '0x311C0C6B350a3fF00607ec024884EfCC9b8dA5a7'
+      cUSDSv3 Implementation: '0x8c087080253cd3Bd395AEcAF16f36Ee608acd96f'
       cUSDSv3 Ext: '0xaA390749cb758Af4070E93478Fc743c72c18989c'
       Configurator: '0x45939657d1CA34A8FA39A924B71D28Fe8431e581'
       Configurator Implementation: '0x83E0F742cAcBE66349E3701B171eE2487a26e738'
@@ -482,7 +483,7 @@ deployments:
     blockscan_origin: 'https://arbiscan.io/'
     contracts:
       cUSDCv3: '0x9c4ec768c28520B50860ea7a15bd7213a9fF58bf'
-      cUSDCv3 Implementation: '0xB1FeB77cD2B8baD438e98d1501c7eAe24DA88CeF'
+      cUSDCv3 Implementation: '0x26A3768Be5aF51c9336fee6De3fA844cEFC8A9ac'
       cUSDCv3 Ext: '0x95DeDD64b551F05E9f59a101a519B024b6b116E7'
       Configurator: '0xb21b06D71c75973babdE35b49fFDAc3F82Ad3775'
       Configurator Implementation: '0x8495AF03fb797E2965bCB42Cb0693e1c15614798'
@@ -506,7 +507,7 @@ deployments:
     blockscan_origin: 'https://arbiscan.io/'
     contracts:
       cUSDTv3: '0xd98Be00b5D27fc98112BdE293e487f8D4cA57d07'
-      cUSDTv3 Implementation: '0xfbE7E43CA05Fe54D1d0553e0aE80c915e1e4Bfb4'
+      cUSDTv3 Implementation: '0xe37ac2D417354B2F94f22E183E77dC7921b76876'
       cUSDTv3 Ext: '0x271A200023c9512d37149dfbb62bf0F62a8D4680'
       Configurator: '0xb21b06D71c75973babdE35b49fFDAc3F82Ad3775'
       Configurator Implementation: '0x8495AF03fb797E2965bCB42Cb0693e1c15614798'
@@ -528,7 +529,7 @@ deployments:
     blockscan_origin: 'https://arbiscan.io/'
     contracts:
       cWETHv3: '0x6f7D514bbD4aFf3BcD1140B7344b32f063dEe486'
-      cWETHv3 Implementation: '0xB4Ffc4a0c4C837D91D24E74131eB6b214476e1c3'
+      cWETHv3 Implementation: '0x43054a9433455e4e9ee9d741A2fa4C7dE471B9b7'
       cWETHv3 Ext: '0x0be923b1716115d742E35Fa359d415598c50510F'
       Configurator: '0xb21b06D71c75973babdE35b49fFDAc3F82Ad3775'
       Configurator Implementation: '0x8495AF03fb797E2965bCB42Cb0693e1c15614798'
@@ -702,8 +703,6 @@ deployments:
 ---
 
 # Compound III
-
-## TEST INFO
 
 ## Introduction
 
