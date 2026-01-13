@@ -194,6 +194,19 @@
       networkTabContainer.classList.add('network-tab-content-container');
       const activeClass = 'active';
 
+      const normalizeContractEntry = (contractValue, blockscanOrigin) => {
+        const address = typeof contractValue === 'string'
+          ? contractValue
+          : contractValue && typeof contractValue === 'object'
+            ? contractValue.address
+            : '';
+
+        return {
+          address: address || '',
+          explorerHref: address && blockscanOrigin ? blockscanOrigin + 'address/' + address : ''
+        };
+      };
+
       for (let i = 0; i < deployments.length; i++) {
         const deploymentName = deployments[i];
         const contracts = Object.entries(deploymentsObject[deployments[i]].contracts);
@@ -219,29 +232,38 @@
 
         const table = tableTemplate.content.cloneNode(true).children[0];
         for (let j = 0; j < contracts.length; j++) {
-          const [ contractName, contractAddress ] = contracts[j];
+          const [ contractName, contractValue ] = contracts[j];
+          const { address, explorerHref } = normalizeContractEntry(contractValue, blockscanOrigin);
           const tbody = table.children[0];
 
           const row = document.createElement('tr');
+
           const cell1 = document.createElement('td');
           cell1.innerText = contractName;
           row.appendChild(cell1);
 
-          const button = copyButtonTemplate.content.cloneNode(true);
-          const link = copyLinkTemplate.content.cloneNode(true);
-
           const cell2 = document.createElement('td');
-          cell2.innerText = contractAddress;
+          cell2.innerText = address || 'N/A';
           row.appendChild(cell2);
 
           const cell3 = document.createElement('td');
-          button.children[0].children[0].dataset.copyText = contractAddress;
-          cell3.appendChild(button);
+          if (address) {
+            const button = copyButtonTemplate.content.cloneNode(true);
+            button.children[0].children[0].dataset.copyText = address;
+            cell3.appendChild(button);
+          } else {
+            cell3.innerText = '—';
+          }
           row.appendChild(cell3);
 
           const cell4 = document.createElement('td');
-          link.children[0].children[0].href = blockscanOrigin + 'address/' + contractAddress;
-          cell4.appendChild(link);
+          if (explorerHref) {
+            const link = copyLinkTemplate.content.cloneNode(true);
+            link.children[0].children[0].href = explorerHref;
+            cell4.appendChild(link);
+          } else {
+            cell4.innerText = '—';
+          }
           row.appendChild(cell4);
 
           tbody.appendChild(row);
