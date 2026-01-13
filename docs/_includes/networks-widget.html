@@ -116,68 +116,6 @@
   table.deployment-table tr td:first-child {
     font-weight: bold;
   }
-
-  /* Collapsible details styles */
-  .contract-details-toggle {
-    cursor: pointer;
-    user-select: none;
-    display: inline-block;
-    margin-left: 8px;
-    color: #00D395;
-    font-size: 14px;
-    vertical-align: middle;
-  }
-
-  .contract-details-toggle:hover {
-    color: #00B882;
-  }
-
-  .contract-details-toggle::before {
-    content: '▼';
-    display: inline-block;
-    margin-right: 4px;
-    transition: transform 0.3s ease;
-  }
-
-  .contract-details-toggle.collapsed::before {
-    transform: rotate(-90deg);
-  }
-
-  .contract-details-content {
-    display: block;
-    margin-top: 8px;
-    padding-left: 20px;
-    max-height: 500px;
-    overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
-    opacity: 1;
-  }
-
-  .contract-details-content.collapsed {
-    max-height: 0;
-    opacity: 0;
-    margin-top: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    overflow: hidden;
-  }
-
-  .contract-details-row {
-    display: flex;
-    padding: 4px 0;
-    font-size: 14px;
-    color: #657786;
-  }
-
-  .contract-details-label {
-    font-weight: bold;
-    min-width: 150px;
-    color: #141E27;
-  }
-
-  .contract-details-value {
-    flex: 1;
-  }
 </style>
 
 <template id="networks-widget-table-template">
@@ -281,130 +219,32 @@
 
         const table = tableTemplate.content.cloneNode(true).children[0];
         for (let j = 0; j < contracts.length; j++) {
-          const [ contractName, contractData ] = contracts[j];
+          const [ contractName, contractAddress ] = contracts[j];
           const tbody = table.children[0];
 
-          // Determine if contractData is a string (address) or an object
-          // Handle both cases: string address or object with address and details
-          let isObject = false;
-          let contractAddress = null;
-          let contractDetails = null;
-          
-          if (typeof contractData === 'string') {
-            // Simple string address (old format)
-            contractAddress = contractData;
-          } else if (typeof contractData === 'object' && contractData !== null && !Array.isArray(contractData)) {
-            // Object with address and details (new format)
-            isObject = true;
-            contractAddress = contractData.address || null;
-            contractDetails = contractData;
-          } else {
-            // Fallback: treat as string
-            contractAddress = String(contractData);
-          }
-
           const row = document.createElement('tr');
-          
-          // Contract name cell
           const cell1 = document.createElement('td');
-          const nameContainer = document.createElement('div');
-          nameContainer.style.display = 'flex';
-          nameContainer.style.alignItems = 'center';
-          
-          const nameText = document.createElement('span');
-          nameText.innerText = contractName;
-          nameContainer.appendChild(nameText);
-          
-          // Add toggle button if there are details
-          // Generate unique ID for this contract's details
-          const detailsId = `details-${i}-${j}`;
-          if (contractDetails && contractAddress) {
-            const toggle = document.createElement('span');
-            toggle.classList.add('contract-details-toggle');
-            toggle.classList.add('collapsed');
-            toggle.innerText = 'Details';
-            toggle.dataset.detailsId = detailsId;
-            toggle.addEventListener('click', (e) => {
-              e.stopPropagation();
-              const detailsContent = document.querySelector(`[data-details-id="${detailsId}"]`);
-              if (detailsContent) {
-                toggle.classList.toggle('collapsed');
-                detailsContent.classList.toggle('collapsed');
-              }
-            });
-            nameContainer.appendChild(toggle);
-          }
-          
-          cell1.appendChild(nameContainer);
+          cell1.innerText = contractName;
           row.appendChild(cell1);
 
           const button = copyButtonTemplate.content.cloneNode(true);
           const link = copyLinkTemplate.content.cloneNode(true);
 
-          // Address cell
           const cell2 = document.createElement('td');
-          if (contractAddress) {
-            cell2.innerText = contractAddress;
-          } else {
-            cell2.innerText = 'N/A';
-          }
+          cell2.innerText = contractAddress;
           row.appendChild(cell2);
 
-          // Copy button cell
           const cell3 = document.createElement('td');
-          if (contractAddress) {
-            button.children[0].children[0].dataset.copyText = contractAddress;
-            cell3.appendChild(button);
-          }
+          button.children[0].children[0].dataset.copyText = contractAddress;
+          cell3.appendChild(button);
           row.appendChild(cell3);
 
-          // External link cell
           const cell4 = document.createElement('td');
-          if (contractAddress) {
-            link.children[0].children[0].href = blockscanOrigin + 'address/' + contractAddress;
-            cell4.appendChild(link);
-          }
+          link.children[0].children[0].href = blockscanOrigin + 'address/' + contractAddress;
+          cell4.appendChild(link);
           row.appendChild(cell4);
 
           tbody.appendChild(row);
-
-          // Add details row if there are additional details
-          if (contractDetails && contractAddress) {
-            const detailsRow = document.createElement('tr');
-            const detailsCell = document.createElement('td');
-            detailsCell.colSpan = 4;
-            detailsCell.style.padding = '0';
-            detailsCell.style.borderBottom = 'none';
-
-            const detailsContent = document.createElement('div');
-            detailsContent.classList.add('contract-details-content');
-            detailsContent.classList.add('collapsed');
-            detailsContent.dataset.detailsId = detailsId;
-
-            // Create rows for each detail field (excluding address)
-            Object.keys(contractDetails).forEach(key => {
-              if (key !== 'address') {
-                const detailRow = document.createElement('div');
-                detailRow.classList.add('contract-details-row');
-                
-                const label = document.createElement('span');
-                label.classList.add('contract-details-label');
-                label.innerText = key + ':';
-                
-                const value = document.createElement('span');
-                value.classList.add('contract-details-value');
-                value.innerText = contractDetails[key];
-                
-                detailRow.appendChild(label);
-                detailRow.appendChild(value);
-                detailsContent.appendChild(detailRow);
-              }
-            });
-
-            detailsCell.appendChild(detailsContent);
-            detailsRow.appendChild(detailsCell);
-            tbody.appendChild(detailsRow);
-          }
         }
 
         networkTab.appendChild(table);
