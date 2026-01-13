@@ -116,6 +116,95 @@
   table.deployment-table tr td:first-child {
     font-weight: bold;
   }
+
+  table.deployment-table tr.expandable-row {
+    cursor: pointer;
+  }
+
+  table.deployment-table tr.expandable-row:hover {
+    background-color: #F7F9FA;
+  }
+
+  table.deployment-table tr.expandable-row td:first-child {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .expand-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    line-height: 1;
+    flex-shrink: 0;
+    transform-origin: center;
+    margin-right: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .expand-toggle.expanded {
+    transform: rotate(90deg);
+  }
+
+  .contract-meta-row {
+    display: none;
+  }
+
+  .contract-meta-row.expanded {
+    display: table-row;
+  }
+
+  .contract-meta-cell {
+    padding: 12px 10px 12px 30px;
+    background-color: #FAFBFC;
+    border-top: none;
+  }
+
+  .contract-meta {
+    color: #5B7083;
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  .contract-meta-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .contract-meta-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .contract-meta-key {
+    font-weight: bold;
+    min-width: 140px;
+    color: #5B7083;
+  }
+
+  .contract-meta-values {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .contract-meta-value {
+    color: #141E27;
+  }
+
+  .contract-meta-raw {
+    color: #5B7083;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .contract-meta-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
 </style>
 
 <template id="networks-widget-table-template">
@@ -194,6 +283,145 @@
       networkTabContainer.classList.add('network-tab-content-container');
       const activeClass = 'active';
 
+      const normalizeContractEntry = (contractValue, blockscanOrigin) => {
+        const isObject = contractValue && typeof contractValue === 'object';
+        const address = typeof contractValue === 'string'
+          ? contractValue
+          : isObject
+            ? contractValue.address
+            : '';
+
+        const meta = isObject
+          ? Object.entries(contractValue).filter(([ key ]) => key !== 'address')
+          : [];
+
+        return {
+          address: address || '',
+          explorerHref: address && blockscanOrigin ? blockscanOrigin + 'address/' + address : '',
+          meta
+        };
+      };
+
+      const createExpandIcon = () => {
+        const icon = document.createElement('span');
+        icon.classList.add('expand-toggle');
+        icon.innerHTML = '▶';
+        return icon;
+      };
+
+      const createCopyButton = (text) => {
+        const button = copyButtonTemplate.content.cloneNode(true);
+        button.children[0].children[0].dataset.copyText = text;
+        return button;
+      };
+
+      const createExplorerLink = (href) => {
+        const link = copyLinkTemplate.content.cloneNode(true);
+        link.children[0].children[0].href = href;
+        return link;
+      };
+
+      const groupMetaEntries = (meta) => {
+        const ordered = [];
+        const map = new Map();
+
+        for (let i = 0; i < meta.length; i++) {
+          const [ key, value ] = meta[i];
+          const rawMatch = key.match(/^(.*)\s+Raw$/);
+          if (rawMatch) {
+            const baseKey = rawMatch[1];
+            let entry = map.get(baseKey);
+            if (!entry) {
+              entry = { key: baseKey, value: undefined, raw: value };
+              ordered.push(entry);
+              map.set(baseKey, entry);
+            } else {
+              entry.raw = value;
+            }
+          } else {
+            let entry = map.get(key);
+            if (entry) {
+              entry.value = value;
+            } else {
+              entry = { key, value, raw: undefined };
+              ordered.push(entry);
+              map.set(key, entry);
+            }
+          }
+        }
+
+        return ordered;
+      };
+
+      const renderContractMetaRow = (meta, tbody, blockscanOrigin) => {
+        if (!meta.length) return null;
+
+        const metaRow = document.createElement('tr');
+        metaRow.classList.add('contract-meta-row');
+
+        const metaCell = document.createElement('td');
+        metaCell.classList.add('contract-meta-cell');
+        metaCell.colSpan = 4;
+
+        const metaContainer = document.createElement('div');
+        metaContainer.classList.add('contract-meta');
+
+        const groupedMeta = groupMetaEntries(meta);
+
+        const formatValue = (val) => {
+          if (val === undefined || val === null) return '—';
+          return typeof val === 'string' ? val : JSON.stringify(val);
+        };
+
+        for (let k = 0; k < groupedMeta.length; k++) {
+          const { key, value, raw } = groupedMeta[k];
+          const item = document.createElement('div');
+          item.classList.add('contract-meta-item');
+
+          const keyNode = document.createElement('div');
+          keyNode.classList.add('contract-meta-key');
+          keyNode.innerText = key;
+          item.appendChild(keyNode);
+
+          const valueWrapper = document.createElement('div');
+          valueWrapper.classList.add('contract-meta-values');
+
+          const valueNode = document.createElement('div');
+          valueNode.classList.add('contract-meta-value');
+          valueNode.innerText = formatValue(value);
+          valueWrapper.appendChild(valueNode);
+
+          if (raw !== undefined) {
+            const rawNode = document.createElement('div');
+            rawNode.classList.add('contract-meta-raw');
+            rawNode.innerText = `Raw: ${formatValue(raw)}`;
+            valueWrapper.appendChild(rawNode);
+          }
+
+          if (key === 'Price Feed' && typeof value === 'string' && value.length) {
+            const actions = document.createElement('div');
+            actions.classList.add('contract-meta-actions');
+
+            actions.appendChild(createCopyButton(value));
+            if (value.startsWith('0x') && value.length > 2) {
+              const explorerHref = blockscanOrigin ? blockscanOrigin + 'address/' + value : '';
+              if (explorerHref) {
+                actions.appendChild(createExplorerLink(explorerHref));
+              }
+            }
+
+            valueWrapper.appendChild(actions);
+          }
+
+          item.appendChild(valueWrapper);
+          metaContainer.appendChild(item);
+        }
+
+        metaCell.appendChild(metaContainer);
+        metaRow.appendChild(metaCell);
+        return metaRow;
+      };
+
       for (let i = 0; i < deployments.length; i++) {
         const deploymentName = deployments[i];
         const contracts = Object.entries(deploymentsObject[deployments[i]].contracts);
@@ -219,32 +447,74 @@
 
         const table = tableTemplate.content.cloneNode(true).children[0];
         for (let j = 0; j < contracts.length; j++) {
-          const [ contractName, contractAddress ] = contracts[j];
+          const [ contractName, contractValue ] = contracts[j];
+          const { address, explorerHref, meta } = normalizeContractEntry(contractValue, blockscanOrigin);
           const tbody = table.children[0];
 
           const row = document.createElement('tr');
+          const hasMeta = meta && meta.length > 0;
+
+          if (hasMeta) {
+            row.classList.add('expandable-row');
+          }
+
           const cell1 = document.createElement('td');
-          cell1.innerText = contractName;
+          if (hasMeta) {
+            const expandIcon = createExpandIcon();
+            cell1.appendChild(expandIcon);
+          }
+          const nameSpan = document.createElement('span');
+          nameSpan.innerText = contractName;
+          cell1.appendChild(nameSpan);
           row.appendChild(cell1);
 
-          const button = copyButtonTemplate.content.cloneNode(true);
-          const link = copyLinkTemplate.content.cloneNode(true);
-
           const cell2 = document.createElement('td');
-          cell2.innerText = contractAddress;
+          cell2.innerText = address || 'N/A';
           row.appendChild(cell2);
 
           const cell3 = document.createElement('td');
-          button.children[0].children[0].dataset.copyText = contractAddress;
-          cell3.appendChild(button);
+          if (address) {
+            const button = copyButtonTemplate.content.cloneNode(true);
+            button.children[0].children[0].dataset.copyText = address;
+            cell3.appendChild(button);
+          } else {
+            cell3.innerText = '—';
+          }
           row.appendChild(cell3);
 
           const cell4 = document.createElement('td');
-          link.children[0].children[0].href = blockscanOrigin + 'address/' + contractAddress;
-          cell4.appendChild(link);
+          if (explorerHref) {
+            const link = copyLinkTemplate.content.cloneNode(true);
+            link.children[0].children[0].href = explorerHref;
+            cell4.appendChild(link);
+          } else {
+            cell4.innerText = '—';
+          }
           row.appendChild(cell4);
 
           tbody.appendChild(row);
+
+          if (hasMeta) {
+            const metaRow = renderContractMetaRow(meta, tbody, blockscanOrigin);
+            if (metaRow) {
+              tbody.appendChild(metaRow);
+
+              row.addEventListener('click', (e) => {
+                if (e.target.closest('.copy-button') || e.target.closest('.blockscan-button') || e.target.closest('a')) {
+                  return;
+                }
+                const isExpanded = metaRow.classList.contains('expanded');
+                const expandIcon = row.querySelector('.expand-toggle');
+                if (isExpanded) {
+                  metaRow.classList.remove('expanded');
+                  if (expandIcon) expandIcon.classList.remove('expanded');
+                } else {
+                  metaRow.classList.add('expanded');
+                  if (expandIcon) expandIcon.classList.add('expanded');
+                }
+              });
+            }
+          }
         }
 
         networkTab.appendChild(table);
