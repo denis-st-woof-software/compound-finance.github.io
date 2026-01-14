@@ -14,42 +14,53 @@
     margin: 10px 0px 22px 0px;
     display: flex;
     gap: 10px;
-    flex-wrap: wrap;
-    padding: 10px;
-    background: #F5F7FA;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 10px 12px;
+    background: linear-gradient(180deg, #F7F9FB 0%, #F2F4F7 100%);
     border: 1px solid #E5E8EB;
-    border-radius: 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+  }
+
+  .networks-widget .network-tabs::-webkit-scrollbar {
+    height: 6px;
+  }
+  .networks-widget .network-tabs::-webkit-scrollbar-thumb {
+    background: #D5DDE6;
+    border-radius: 999px;
   }
 
   .networks-widget .network-tabs .network-tab-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 14px;
+    padding: 9px 16px;
     user-select: none;
     cursor: pointer;
     font-weight: 700;
     font-size: 14px;
     line-height: 20px;
-    color: #5B7083;
+    color: #4B5B6B;
     border: 1px solid #E0E5EA;
-    border-radius: 10px;
+    border-radius: 12px;
     background: #fff;
     transition: all 0.15s ease;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    white-space: nowrap;
   }
 
   .networks-widget .network-tabs .network-tab-button:hover {
-    border-color: #CCD6DD;
+    border-color: #C8D2DC;
     color: #141E27;
+    transform: translateY(-1px);
   }
 
   .networks-widget .network-tabs .network-tab-button.active {
     color: #fff;
     background: linear-gradient(135deg, #141E27, #1F2A34);
     border-color: #141E27;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
   }
 
   .networks-widget .network-tab-content-container {
@@ -199,6 +210,8 @@
     color: #5B7083;
     font-size: 12px;
     line-height: 16px;
+    word-break: break-all;
+    overflow-wrap: anywhere;
   }
 
   .metric .bar {
