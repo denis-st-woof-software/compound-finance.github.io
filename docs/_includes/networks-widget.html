@@ -376,9 +376,12 @@
         deploymentsObject = JSON.parse(('{{ page.deployments }}').replace(/=>/g, ':'));
     } catch (e) {
         console.error(e);
+      return;
       }
 
-      const deployments = Object.keys(deploymentsObject);
+    const deploymentsEntries = Object.entries(deploymentsObject || {});
+    if (!deploymentsEntries.length) return;
+
       const networksWidget = document.createElement('div');
       networksWidget.classList.add('networks-widget');
 
@@ -386,27 +389,34 @@
       networkTabs.classList.add('network-tabs');
       networkTabs.id = 'network-tabs';
 
-    const networkTabContainer = document.createElement('div');
-    networkTabContainer.classList.add('network-tab-content-container');
-    const activeClass = 'active';
+      const networkTabContainer = document.createElement('div');
+      networkTabContainer.classList.add('network-tab-content-container');
+      const activeClass = 'active';
 
-      const tabClickHandler = (buttonIndex) => {
-        const networkTabsContainer = document.getElementById('network-tabs');
-        const tabContentContainers = document.getElementsByClassName('network-tab-content');
-        const target = networkTabsContainer.children[buttonIndex];
-        const numTabs = networkTabsContainer.children.length;
-        for (let j = 0; j < numTabs; j++) {
-          networkTabsContainer.children[j].classList.remove(activeClass);
-          tabContentContainers[j].classList.remove(activeClass);
-        }
-        target.classList.add(activeClass);
-        const tabContent = document.getElementById('network-tab-' + target.dataset.index);
-        tabContent.classList.add(activeClass);
-      };
+    const tabClickHandler = (buttonIndex) => {
+      const tabs = networkTabs.children;
+      const tabContentContainers = networkTabContainer.children;
+      for (let j = 0; j < tabs.length; j++) {
+        tabs[j].classList.remove(activeClass);
+        tabContentContainers[j].classList.remove(activeClass);
+      }
+      const targetTab = tabs[buttonIndex];
+      const targetContent = tabContentContainers[buttonIndex];
+      if (targetTab && targetContent) {
+        targetTab.classList.add(activeClass);
+        targetContent.classList.add(activeClass);
+      }
+    };
 
     const truncateAddress = (addr) => {
       if (!addr || addr.length < 12) return addr || '';
       return addr.slice(0, 6) + '…' + addr.slice(-4);
+    };
+
+    const percentWidth = (value) => {
+      const numeric = parseFloat(String(value).replace('%', ''));
+      if (Number.isNaN(numeric)) return 0;
+      return Math.max(0, Math.min(100, numeric));
     };
 
     const normalizeContractEntry = (contractValue, blockscanOrigin) => {
@@ -423,7 +433,7 @@
 
       return {
         address: address || '',
-        explorerHref: address && blockscanOrigin ? blockscanOrigin + 'address/' + address : '',
+        explorerHref: address && blockscanOrigin ? `${blockscanOrigin}address/${address}` : '',
         meta
       };
     };
@@ -438,12 +448,6 @@
       const link = copyLinkTemplate.content.cloneNode(true);
       link.children[0].children[0].href = href;
       return link;
-    };
-
-    const percentWidth = (value) => {
-      const numeric = parseFloat(String(value).replace('%', ''));
-      if (Number.isNaN(numeric)) return 0;
-      return Math.max(0, Math.min(100, numeric));
     };
 
     const buildMetric = (label, value, raw, isPercent = false) => {
@@ -464,7 +468,7 @@
       bar.classList.add('bar');
       if (isPercent) {
         const fill = document.createElement('div');
-        fill.style.width = percentWidth(value) + '%';
+        fill.style.width = `${percentWidth(value)}%`;
         bar.appendChild(fill);
       } else {
         bar.classList.add('placeholder');
@@ -486,8 +490,7 @@
       const container = document.createElement('div');
       container.classList.add('meta-list');
 
-      for (let i = 0; i < metaEntries.length; i++) {
-        const [ key, value ] = metaEntries[i];
+      for (const [key, value] of metaEntries) {
         const item = document.createElement('div');
         item.classList.add('meta-item');
 
@@ -509,11 +512,11 @@
         if (isPriceFeed) valWrapper.title = value;
         item.appendChild(valWrapper);
 
-        if (key === 'Price Feed' && typeof value === 'string' && value.length) {
+        if (isPriceFeed) {
           const actions = document.createElement('div');
           actions.classList.add('meta-actions');
           actions.appendChild(createCopyButton(value));
-          const explorerHref = blockscanOrigin ? blockscanOrigin + 'address/' + value : '';
+          const explorerHref = blockscanOrigin ? `${blockscanOrigin}address/${value}` : '';
           if (explorerHref) {
             actions.appendChild(createExplorerLink(explorerHref));
           }
@@ -530,7 +533,7 @@
       const { address, explorerHref, meta } = normalizeContractEntry(contractValue, blockscanOrigin);
       const metaMap = new Map(meta);
       const getVal = (key) => metaMap.get(key);
-      const getRaw = (key) => metaMap.get(key + ' Raw');
+      const getRaw = (key) => metaMap.get(`${key} Raw`);
 
       const usedKeys = new Set(['Borrow CF', 'Liquidation CF', 'Liquidation Penalty', 'Supply Cap', 'Price Feed']);
 
@@ -573,12 +576,7 @@
       metrics.appendChild(buildMetric('Supply Cap', getVal('Supply Cap'), getRaw('Supply Cap'), false));
       card.appendChild(metrics);
 
-      const remainingMeta = meta.filter(([ key ]) => {
-        if (key.endsWith(' Raw')) return false;
-        if (usedKeys.has(key)) return false;
-        return true;
-      });
-
+      const remainingMeta = meta.filter(([key]) => !key.endsWith(' Raw') && !usedKeys.has(key));
       const priceFeed = getVal('Price Feed');
       if (priceFeed !== undefined && priceFeed !== null) {
         remainingMeta.unshift(['Price Feed', priceFeed]);
@@ -601,8 +599,7 @@
       const list = document.createElement('div');
       list.classList.add('protocol-list');
 
-      for (let i = 0; i < entries.length; i++) {
-        const [ name, address ] = entries[i];
+      for (const [name, address] of entries) {
         const item = document.createElement('div');
         item.classList.add('protocol-item');
 
@@ -620,7 +617,7 @@
         const actions = document.createElement('div');
         actions.classList.add('actions');
         if (address) actions.appendChild(createCopyButton(address));
-        if (address && blockscanOrigin) actions.appendChild(createExplorerLink(blockscanOrigin + 'address/' + address));
+        if (address && blockscanOrigin) actions.appendChild(createExplorerLink(`${blockscanOrigin}address/${address}`));
 
         item.appendChild(info);
         item.appendChild(actions);
@@ -631,24 +628,26 @@
       return card;
     };
 
-      for (let i = 0; i < deployments.length; i++) {
-        const deploymentName = deployments[i];
-      const contracts = Object.entries(deploymentsObject[deploymentName].contracts || {});
-      const blockscanOrigin = deploymentsObject[deploymentName].blockscan_origin;
-      const tabText = deploymentsObject[deploymentName].tab_text || deploymentName;
+    const tabsFragment = document.createDocumentFragment();
+    const contentFragment = document.createDocumentFragment();
+
+    deploymentsEntries.forEach(([deploymentName, deploymentData], index) => {
+      const contracts = Object.entries(deploymentData.contracts || {});
+      const blockscanOrigin = deploymentData.blockscan_origin;
+      const tabText = deploymentData.tab_text || deploymentName;
 
         const tabButton = document.createElement('div');
         tabButton.classList.add('network-tab-button');
-        tabButton.id = 'network-tab-button-' + i;
-        tabButton.dataset.index = i;
+      tabButton.id = `network-tab-button-${index}`;
+      tabButton.dataset.index = index;
         tabButton.innerText = tabText;
-        tabButton.addEventListener('click', _ => tabClickHandler(+_.target.dataset.index));
-        networkTabs.appendChild(tabButton);
+      tabButton.addEventListener('click', () => tabClickHandler(index));
+      tabsFragment.appendChild(tabButton);
 
         const networkTab = document.createElement('div');
         networkTab.classList.add('network-tab-content');
-        networkTab.id = 'network-tab-' + i;
-        networkTab.dataset.index = i;
+      networkTab.id = `network-tab-${index}`;
+      networkTab.dataset.index = index;
 
         const header = document.createElement('h4');
         header.innerText = deploymentName;
@@ -656,12 +655,11 @@
 
       const assetEntries = [];
       const protocolEntries = [];
-        for (let j = 0; j < contracts.length; j++) {
-        const [ name, value ] = contracts[j];
+      for (const [name, value] of contracts) {
         if (value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'address')) {
-          assetEntries.push([ name, value ]);
+          assetEntries.push([name, value]);
         } else {
-          protocolEntries.push([ name, value ]);
+          protocolEntries.push([name, value]);
         }
       }
 
@@ -673,16 +671,17 @@
       if (assetEntries.length) {
         const cards = document.createElement('div');
         cards.classList.add('card-layout');
-        for (let j = 0; j < assetEntries.length; j++) {
-          const [ name, value ] = assetEntries[j];
+        for (const [name, value] of assetEntries) {
           cards.appendChild(buildAssetCard(name, value, blockscanOrigin));
         }
         networkTab.appendChild(cards);
       }
 
-        networkTabContainer.appendChild(networkTab);
-      }
+      contentFragment.appendChild(networkTab);
+    });
 
+    networkTabs.appendChild(tabsFragment);
+    networkTabContainer.appendChild(contentFragment);
       networksWidget.appendChild(networkTabContainer);
       networksWidget.prepend(networkTabs);
       deploymentsContainer.appendChild(networksWidget);
