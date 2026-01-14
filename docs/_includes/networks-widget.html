@@ -84,6 +84,9 @@
     margin: 0px;
     background: url('{{ "/public/img/icn-copy.svg" | relative_url }}');
     background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    display: block;
   }
 
   .copy-tool .copy-button:hover {
@@ -97,10 +100,17 @@
     margin: 0px 4px;
     background: url('{{ "/public/img/icn-external-link.svg" | relative_url }}');
     background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    display: block;
   }
 
   .copy-tool .blockscan-button:hover {
     background: url('{{ "/public/img/icn-external-link-green.svg" | relative_url }}');
+  }
+
+  .copy-tool a {
+    display: inline-block;
   }
 
   .card-layout {
