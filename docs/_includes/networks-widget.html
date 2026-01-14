@@ -233,13 +233,12 @@
 
   .meta-list {
     margin-top: 10px;
-    padding: 10px;
+    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    background: #F7F9FA;
-    border: 1px solid #E5E8EB;
-    border-radius: 10px;
+    border: none;
+    background: transparent;
     margin-top: auto;
   }
 
@@ -248,7 +247,7 @@
     align-items: center;
     gap: 8px;
     flex-wrap: nowrap;
-    padding: 6px 8px;
+    padding: 0;
     border: none;
     border-radius: 0;
     background: transparent;
@@ -511,7 +510,7 @@
       const getVal = (key) => metaMap.get(key);
       const getRaw = (key) => metaMap.get(`${key} Raw`);
 
-      const usedKeys = new Set(['Borrow CF', 'Liquidation CF', 'Liquidation Penalty', 'Supply Cap', 'Price Feed']);
+      const usedKeys = new Set(['Borrow CF', 'Liquidation CF', 'Liquidation Penalty', 'Supply Cap']);
 
       const card = document.createElement('div');
       card.classList.add('asset-card');
@@ -551,12 +550,9 @@
       metrics.appendChild(buildMetric('Liquidation Penalty', getVal('Liquidation Penalty'), getRaw('Liquidation Penalty')));
       metrics.appendChild(buildMetric('Supply Cap', getVal('Supply Cap'), getRaw('Supply Cap')));
 
-      const priceFeed = getVal('Price Feed');
-      metrics.appendChild(buildMetric('Price Feed', priceFeed ? truncateAddress(priceFeed) : '—', priceFeed || '—'));
-
       card.appendChild(metrics);
 
-      const remainingMeta = meta.filter(([key]) => !key.endsWith(' Raw') && !usedKeys.has(key) && key !== 'Price Feed');
+      const remainingMeta = meta.filter(([key]) => !key.endsWith(' Raw') && !usedKeys.has(key));
       const metaList = buildMetaList(remainingMeta, blockscanOrigin);
       if (metaList) card.appendChild(metaList);
 
