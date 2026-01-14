@@ -496,10 +496,10 @@
         keyNode.innerText = key;
         item.appendChild(keyNode);
 
+        const isPriceFeed = key === 'Price Feed' && typeof value === 'string' && value.length;
         const valWrapper = document.createElement('div');
         valWrapper.classList.add('meta-value');
         if (isPriceFeed) valWrapper.classList.add('price-feed');
-        const isPriceFeed = key === 'Price Feed' && typeof value === 'string' && value.length;
         const displayValue = value === undefined || value === null || value === ''
           ? '—'
           : isPriceFeed
