@@ -554,10 +554,6 @@
       card.appendChild(metrics);
 
       const remainingMeta = meta.filter(([key]) => !key.endsWith(' Raw') && !usedKeys.has(key));
-      const priceFeed = getVal('Price Feed');
-      if (priceFeed !== undefined && priceFeed !== null) {
-        remainingMeta.unshift(['Price Feed', priceFeed]);
-      }
       const metaList = buildMetaList(remainingMeta, blockscanOrigin);
       if (metaList) card.appendChild(metaList);
 
