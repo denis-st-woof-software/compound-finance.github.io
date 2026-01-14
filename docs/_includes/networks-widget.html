@@ -228,20 +228,7 @@
   }
 
   .metric .bar {
-    height: 6px;
-    background: #E6EDF2;
-    border-radius: 6px;
-    overflow: hidden;
-    margin-top: 4px;
-  }
-
-  .metric .bar > div {
-    height: 100%;
-    background: linear-gradient(90deg, #0BA360, #3CBA92);
-  }
-
-  .metric .bar.placeholder {
-    background: transparent;
+    display: none;
   }
 
   .meta-list {
@@ -464,17 +451,6 @@
       val.innerText = value || '—';
       metric.appendChild(val);
 
-      const bar = document.createElement('div');
-      bar.classList.add('bar');
-      if (isPercent) {
-        const fill = document.createElement('div');
-        fill.style.width = `${percentWidth(value)}%`;
-        bar.appendChild(fill);
-      } else {
-        bar.classList.add('placeholder');
-      }
-      metric.appendChild(bar);
-
       const rawEl = document.createElement('div');
       rawEl.classList.add('raw');
       const hasRaw = raw !== undefined && raw !== null && raw !== '';
@@ -570,18 +546,17 @@
 
       const metrics = document.createElement('div');
       metrics.classList.add('metric-grid');
-      metrics.appendChild(buildMetric('Borrow CF', getVal('Borrow CF'), getRaw('Borrow CF'), true));
-      metrics.appendChild(buildMetric('Liquidation CF', getVal('Liquidation CF'), getRaw('Liquidation CF'), true));
-      metrics.appendChild(buildMetric('Liquidation Penalty', getVal('Liquidation Penalty'), getRaw('Liquidation Penalty'), true));
-      metrics.appendChild(buildMetric('Supply Cap', getVal('Supply Cap'), getRaw('Supply Cap'), false));
+      metrics.appendChild(buildMetric('Borrow CF', getVal('Borrow CF'), getRaw('Borrow CF')));
+      metrics.appendChild(buildMetric('Liquidation CF', getVal('Liquidation CF'), getRaw('Liquidation CF')));
+      metrics.appendChild(buildMetric('Liquidation Penalty', getVal('Liquidation Penalty'), getRaw('Liquidation Penalty')));
+      metrics.appendChild(buildMetric('Supply Cap', getVal('Supply Cap'), getRaw('Supply Cap')));
+
+      const priceFeed = getVal('Price Feed');
+      metrics.appendChild(buildMetric('Price Feed', priceFeed ? truncateAddress(priceFeed) : '—', priceFeed || '—'));
+
       card.appendChild(metrics);
 
-      const remainingMeta = meta.filter(([key]) => !key.endsWith(' Raw') && !usedKeys.has(key));
-      const priceFeed = getVal('Price Feed');
-      if (priceFeed !== undefined && priceFeed !== null) {
-        remainingMeta.unshift(['Price Feed', priceFeed]);
-      }
-
+      const remainingMeta = meta.filter(([key]) => !key.endsWith(' Raw') && !usedKeys.has(key) && key !== 'Price Feed');
       const metaList = buildMetaList(remainingMeta, blockscanOrigin);
       if (metaList) card.appendChild(metaList);
 
@@ -662,6 +637,7 @@
           protocolEntries.push([name, value]);
         }
       }
+      assetEntries.sort((a, b) => a[0].localeCompare(b[0]));
 
       if (protocolEntries.length) {
         const protoCard = buildProtocolCard(protocolEntries, blockscanOrigin);
