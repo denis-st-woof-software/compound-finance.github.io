@@ -529,7 +529,7 @@
       nameEl.innerText = contractName;
       const addrEl = document.createElement('div');
       addrEl.classList.add('asset-address');
-      addrEl.innerText = address ? truncateAddress(address) : 'Address: N/A';
+      addrEl.innerText = address || 'Address: N/A';
       title.appendChild(nameEl);
       title.appendChild(addrEl);
       left.appendChild(title);
