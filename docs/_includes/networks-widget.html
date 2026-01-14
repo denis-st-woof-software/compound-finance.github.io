@@ -13,26 +13,43 @@
     width: 100%;
     margin: 10px 0px 22px 0px;
     display: flex;
-    gap: 16px;
+    gap: 10px;
     flex-wrap: wrap;
+    padding: 10px;
+    background: #F5F7FA;
+    border: 1px solid #E5E8EB;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
   }
 
   .networks-widget .network-tabs .network-tab-button {
-    display: inline-block;
-    padding-right: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
     user-select: none;
     cursor: pointer;
-    font-weight: bold;
-    font-size: 18px;
-    line-height: 36px;
-    color: #CCD6DD;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    color: #5B7083;
+    border: 1px solid #E0E5EA;
+    border-radius: 10px;
+    background: #fff;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .networks-widget .network-tabs .network-tab-button:hover {
+    border-color: #CCD6DD;
+    color: #141E27;
   }
 
   .networks-widget .network-tabs .network-tab-button.active {
-    color: #141E27;
-    text-decoration: underline;
-    text-underline-offset: 6px;
-    text-decoration-thickness: 2px;
+    color: #fff;
+    background: linear-gradient(135deg, #141E27, #1F2A34);
+    border-color: #141E27;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   }
 
   .networks-widget .network-tab-content-container {
@@ -112,20 +129,6 @@
     align-items: center;
     gap: 10px;
     min-width: 0;
-  }
-
-  .asset-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #0BA360, #3CBA92);
-    color: #fff;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    letter-spacing: 0.3px;
-    flex-shrink: 0;
   }
 
   .asset-title {
@@ -224,6 +227,7 @@
     display: flex;
     align-items: flex-start;
     gap: 8px;
+    flex-wrap: wrap;
   }
 
   .meta-key {
@@ -236,12 +240,15 @@
   .meta-value {
     color: #141E27;
     font-size: 14px;
+    word-break: break-all;
+    max-width: 100%;
   }
 
   .meta-actions {
     display: inline-flex;
     gap: 6px;
     margin-left: 6px;
+    flex-shrink: 0;
   }
 
   .protocol-card h5 {
@@ -444,7 +451,14 @@
 
         const valWrapper = document.createElement('div');
         valWrapper.classList.add('meta-value');
-        valWrapper.innerText = value === undefined || value === null || value === '' ? '—' : value;
+        const isPriceFeed = key === 'Price Feed' && typeof value === 'string' && value.length;
+        const displayValue = value === undefined || value === null || value === ''
+          ? '—'
+          : isPriceFeed
+            ? truncateAddress(value)
+            : value;
+        valWrapper.innerText = displayValue;
+        if (isPriceFeed) valWrapper.title = value;
         item.appendChild(valWrapper);
 
         if (key === 'Price Feed' && typeof value === 'string' && value.length) {
@@ -480,10 +494,6 @@
 
       const left = document.createElement('div');
       left.classList.add('left');
-      const icon = document.createElement('div');
-      icon.classList.add('asset-icon');
-      icon.innerText = (contractName || '?').slice(0, 1).toUpperCase();
-      left.appendChild(icon);
 
       const title = document.createElement('div');
       title.classList.add('asset-title');
@@ -605,6 +615,11 @@
         }
       }
 
+      if (protocolEntries.length) {
+        const protoCard = buildProtocolCard(protocolEntries, blockscanOrigin);
+        if (protoCard) networkTab.appendChild(protoCard);
+      }
+
       if (assetEntries.length) {
         const cards = document.createElement('div');
         cards.classList.add('card-layout');
@@ -613,11 +628,6 @@
           cards.appendChild(buildAssetCard(name, value, blockscanOrigin));
         }
         networkTab.appendChild(cards);
-      }
-
-      if (protocolEntries.length) {
-        const protoCard = buildProtocolCard(protocolEntries, blockscanOrigin);
-        if (protoCard) networkTab.appendChild(protoCard);
       }
 
       networkTabContainer.appendChild(networkTab);
