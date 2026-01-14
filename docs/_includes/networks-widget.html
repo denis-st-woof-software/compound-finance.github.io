@@ -195,6 +195,7 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    min-height: 120px;
   }
 
   .metric .label {
@@ -214,8 +215,9 @@
     color: #5B7083;
     font-size: 12px;
     line-height: 16px;
-    word-break: break-all;
-    overflow-wrap: anywhere;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     min-height: 16px;
   }
 
@@ -243,9 +245,9 @@
 
   .meta-item {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 8px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
 
   .meta-key {
@@ -258,8 +260,10 @@
   .meta-value {
     color: #141E27;
     font-size: 14px;
-    word-break: break-all;
-    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
   }
 
   .meta-actions {
@@ -446,6 +450,7 @@
       rawEl.classList.add('raw');
       const hasRaw = raw !== undefined && raw !== null && raw !== '';
       rawEl.innerText = `Raw: ${hasRaw ? raw : '—'}`;
+      if (hasRaw) rawEl.title = raw;
       metric.appendChild(rawEl);
 
       return metric;
