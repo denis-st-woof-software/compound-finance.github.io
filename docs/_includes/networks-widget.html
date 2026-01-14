@@ -87,11 +87,14 @@
     background-size: contain;
     background-position: center;
     display: block;
+    box-sizing: border-box;
+    transform: scale(1);
   }
 
   .copy-tool .copy-button:hover {
     background: url('{{ "/public/img/icn-copy-green.svg" | relative_url }}');
     cursor: pointer;
+    transform: scale(1);
   }
 
   .copy-tool .blockscan-button {
@@ -103,10 +106,13 @@
     background-size: contain;
     background-position: center;
     display: block;
+    box-sizing: border-box;
+    transform: scale(1);
   }
 
   .copy-tool .blockscan-button:hover {
     background: url('{{ "/public/img/icn-external-link-green.svg" | relative_url }}');
+    transform: scale(1);
   }
 
   .copy-tool a {
