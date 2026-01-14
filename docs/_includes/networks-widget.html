@@ -213,12 +213,11 @@
 
   .metric .raw {
     color: #5B7083;
-    font-size: 12px;
-    line-height: 16px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-height: 16px;
+    font-size: 11px;
+    line-height: 14px;
+    white-space: normal;
+    word-break: break-word;
+    min-height: 14px;
   }
 
   .metric .bar {
@@ -232,6 +231,11 @@
   .metric .bar > div {
     height: 100%;
     background: linear-gradient(90deg, #0BA360, #3CBA92);
+  }
+
+  .metric .bar.placeholder {
+    background: #E6EDF2;
+    opacity: 0.45;
   }
 
   .meta-list {
@@ -437,14 +441,16 @@
       val.innerText = value || '—';
       metric.appendChild(val);
 
+      const bar = document.createElement('div');
+      bar.classList.add('bar');
       if (isPercent) {
-        const bar = document.createElement('div');
-        bar.classList.add('bar');
         const fill = document.createElement('div');
         fill.style.width = percentWidth(value) + '%';
         bar.appendChild(fill);
-        metric.appendChild(bar);
+      } else {
+        bar.classList.add('placeholder');
       }
+      metric.appendChild(bar);
 
       const rawEl = document.createElement('div');
       rawEl.classList.add('raw');
