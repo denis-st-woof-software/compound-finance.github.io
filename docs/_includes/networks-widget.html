@@ -84,17 +84,19 @@
     margin: 0px;
     background: url('{{ "/public/img/icn-copy.svg" | relative_url }}');
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: 16px 16px;
     background-position: center;
     display: block;
     box-sizing: border-box;
-    transform: scale(1);
+    transition: none;
+    transform: none !important;
   }
 
   .copy-tool .copy-button:hover {
     background: url('{{ "/public/img/icn-copy-green.svg" | relative_url }}');
     cursor: pointer;
-    transform: scale(1);
+    transition: none;
+    transform: none !important;
   }
 
   .copy-tool .blockscan-button {
@@ -103,16 +105,18 @@
     margin: 0px 4px;
     background: url('{{ "/public/img/icn-external-link.svg" | relative_url }}');
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: 16px 16px;
     background-position: center;
     display: block;
     box-sizing: border-box;
-    transform: scale(1);
+    transition: none;
+    transform: none !important;
   }
 
   .copy-tool .blockscan-button:hover {
     background: url('{{ "/public/img/icn-external-link-green.svg" | relative_url }}');
-    transform: scale(1);
+    transition: none;
+    transform: none !important;
   }
 
   .copy-tool a {
