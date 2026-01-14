@@ -221,7 +221,20 @@
   }
 
   .metric .bar {
-    display: none;
+    height: 6px;
+    background: #E6EDF2;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+
+  .metric .bar > div {
+    height: 100%;
+    background: linear-gradient(90deg, #0BA360, #3CBA92);
+  }
+
+  .metric .bar.placeholder {
+    background: transparent;
   }
 
   .meta-list {
@@ -413,7 +426,7 @@
       return Math.max(0, Math.min(100, numeric));
     };
 
-    const buildMetric = (label, value, raw) => {
+    const buildMetric = (label, value, raw, isPercent = false) => {
       const metric = document.createElement('div');
       metric.classList.add('metric');
 
@@ -426,6 +439,17 @@
       val.classList.add('value');
       val.innerText = value || '—';
       metric.appendChild(val);
+
+      const bar = document.createElement('div');
+      bar.classList.add('bar');
+      if (isPercent) {
+        const fill = document.createElement('div');
+        fill.style.width = percentWidth(value) + '%';
+        bar.appendChild(fill);
+      } else {
+        bar.classList.add('placeholder');
+      }
+      metric.appendChild(bar);
 
       const rawEl = document.createElement('div');
       rawEl.classList.add('raw');
@@ -521,10 +545,10 @@
 
       const metrics = document.createElement('div');
       metrics.classList.add('metric-grid');
-      metrics.appendChild(buildMetric('Borrow CF', getVal('Borrow CF'), getRaw('Borrow CF')));
-      metrics.appendChild(buildMetric('Liquidation CF', getVal('Liquidation CF'), getRaw('Liquidation CF')));
-      metrics.appendChild(buildMetric('Liquidation Penalty', getVal('Liquidation Penalty'), getRaw('Liquidation Penalty')));
-      metrics.appendChild(buildMetric('Supply Cap', getVal('Supply Cap'), getRaw('Supply Cap')));
+      metrics.appendChild(buildMetric('Borrow CF', getVal('Borrow CF'), getRaw('Borrow CF'), true));
+      metrics.appendChild(buildMetric('Liquidation CF', getVal('Liquidation CF'), getRaw('Liquidation CF'), true));
+      metrics.appendChild(buildMetric('Liquidation Penalty', getVal('Liquidation Penalty'), getRaw('Liquidation Penalty'), true));
+      metrics.appendChild(buildMetric('Supply Cap', getVal('Supply Cap'), getRaw('Supply Cap'), false));
       card.appendChild(metrics);
 
       const remainingMeta = meta.filter(([ key ]) => {
