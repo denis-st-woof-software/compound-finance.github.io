@@ -167,9 +167,9 @@
   }
 
   .asset-address {
-    color: #141E27;
-    font-size: 14px;
-    line-height: 18px;
+    color: #5B7083;
+    font-size: 13px;
+    line-height: 16px;
   }
 
   .card-actions {
@@ -283,6 +283,12 @@
     flex: 1;
   }
 
+  .meta-value.price-feed {
+    color: #5B7083;
+    font-size: 13px;
+    line-height: 16px;
+  }
+
   .meta-actions {
     display: inline-flex;
     gap: 6px;
@@ -320,8 +326,8 @@
   }
 
   .protocol-item .addr {
-    color: #141E27;
-    font-size: 14px;
+    color: #5B7083;
+    font-size: 12px;
   }
 
   .protocol-item .actions {
@@ -492,6 +498,7 @@
 
         const valWrapper = document.createElement('div');
         valWrapper.classList.add('meta-value');
+        if (isPriceFeed) valWrapper.classList.add('price-feed');
         const isPriceFeed = key === 'Price Feed' && typeof value === 'string' && value.length;
         const displayValue = value === undefined || value === null || value === ''
           ? '—'
