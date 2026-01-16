@@ -69,4 +69,4 @@ fi
 git -C "${REPO_ROOT}" config user.name "${GIT_AUTHOR_NAME}"
 git -C "${REPO_ROOT}" config user.email "${GIT_AUTHOR_EMAIL}"
 git -C "${REPO_ROOT}" commit -m "${COMMIT_MESSAGE}"
-git -C "${REPO_ROOT}" push
+git -C "${REPO_ROOT}" push origin master
