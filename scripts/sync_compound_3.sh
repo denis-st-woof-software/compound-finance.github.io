@@ -40,7 +40,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-api_url="${GITHUB_API_BASE}/repos/${SOURCE_OWNER}/${SOURCE_REPO}/contents/${SOURCE_PATH}?ref=${SOURCE_REF}"
+api_url="${GITHUB_API_BASE}/repos/${SOURCE_OWNER}/${SOURCE_REPO}/contents/${SOURCE_PATH}?ref=${SOURCE_BRANCH}"
 
 curl_args=(-sS -L -H "Accept: application/vnd.github.v3.raw")
 if [[ -n "${GH_TOKEN:-}" ]]; then
