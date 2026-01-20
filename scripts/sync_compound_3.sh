@@ -164,21 +164,28 @@ if [[ -z "${EXISTING_PR}" ]]; then
   pr_data="{\"title\":\"${PR_TITLE_ESC}\",\"body\":\"${PR_BODY_ESC}\",\"head\":\"${PR_BRANCH_NAME}\",\"base\":\"master\"}"
   pr_url="${GITHUB_API_BASE}/repos/${TARGET_OWNER}/${TARGET_REPO}/pulls"
   
-  # Create temp files for response and HTTP code
+  # Create temp files for response
   pr_response_file="$(mktemp)"
-  http_code_file="$(mktemp)"
   cleanup() {
-    rm -f "${tmp_file}" "${PR_FILE_TMP}" "${pr_response_file}" "${http_code_file}"
+    rm -f "${tmp_file}" "${PR_FILE_TMP}" "${pr_response_file}"
   }
   
-  # Make API call and capture HTTP status code
-  curl "${curl_args[@]}" -H "Accept: application/vnd.github.v3+json" \
+  # Make API call: save response to file, capture HTTP code from stdout
+  # -w outputs HTTP code after body is written to file
+  http_code="$(curl "${curl_args[@]}" -H "Accept: application/vnd.github.v3+json" \
     -w "%{http_code}" -o "${pr_response_file}" \
-    -X POST -d "${pr_data}" "${pr_url}" > "${http_code_file}" 2>&1 || true
+    -X POST -d "${pr_data}" "${pr_url}" 2>&1 || echo "000")"
   
-  http_code="$(cat "${http_code_file}" | tr -d '\n\r ')"
-  
+  # Clean up HTTP code (remove any trailing newlines/spaces)
+  http_code="$(echo -n "${http_code}" | tr -d '\n\r ')"
   pr_response="$(cat "${pr_response_file}")"
+  
+  echo "DEBUG: HTTP code received: '${http_code}'" >&2
+  if [[ ${#pr_response} -eq 0 ]]; then
+    echo "DEBUG: Response body is empty!" >&2
+  else
+    echo "DEBUG: Response preview: ${pr_response:0:200}..." >&2
+  fi
   
   # Check HTTP status code (201 = Created)
   if [[ "${http_code}" != "201" ]]; then
@@ -190,7 +197,7 @@ if [[ -z "${EXISTING_PR}" ]]; then
       echo "Failed to create PR (HTTP ${http_code})." >&2
     fi
     echo "Full response: ${pr_response}" >&2
-    rm -f "${pr_response_file}" "${http_code_file}"
+    rm -f "${pr_response_file}"
     exit 1
   fi
   
@@ -202,11 +209,11 @@ if [[ -z "${EXISTING_PR}" ]]; then
   else
     echo "Failed to create PR. Unexpected response format." >&2
     echo "Response: ${pr_response}" >&2
-    rm -f "${pr_response_file}" "${http_code_file}"
+    rm -f "${pr_response_file}"
     exit 1
   fi
   
-  rm -f "${pr_response_file}" "${http_code_file}"
+  rm -f "${pr_response_file}"
 else
   echo "Updated existing PR #${EXISTING_PR}"
 fi
