@@ -48,13 +48,16 @@ trap cleanup EXIT
 
 api_url="${GITHUB_API_BASE}/repos/${SOURCE_OWNER}/${SOURCE_REPO}/contents/${SOURCE_PATH}?ref=${SOURCE_BRANCH}"
 
-curl_args=(-sS -L -H "Accept: application/vnd.github.v3.raw")
+curl_args=(-sS -L -f -H "Accept: application/vnd.github.v3.raw")
 if [[ -n "${GH_TOKEN:-}" ]]; then
   curl_args+=(-H "Authorization: token ${GH_TOKEN}")
 fi
 
 echo "Downloading source file from ${api_url}"
-curl "${curl_args[@]}" "${api_url}" -o "${tmp_file}"
+if ! curl "${curl_args[@]}" "${api_url}" -o "${tmp_file}"; then
+  echo "Failed to download source file." >&2
+  exit 1
+fi
 
 mkdir -p "$(dirname "${TARGET_ABS_PATH}")"
 
@@ -97,8 +100,9 @@ fi
 
 cp "${tmp_file}" "${TARGET_ABS_PATH}"
 
-if git -C "${REPO_ROOT}" show-ref --verify --quiet "refs/heads/${PR_BRANCH}"; then
-  git -C "${REPO_ROOT}" checkout "${PR_BRANCH}"
+if [[ -n "${open_pr_exists}" ]]; then
+  git -C "${REPO_ROOT}" fetch origin "${PR_BRANCH}" >/dev/null 2>&1
+  git -C "${REPO_ROOT}" checkout -B "${PR_BRANCH}" "origin/${PR_BRANCH}"
 else
   git -C "${REPO_ROOT}" fetch origin "${BASE_BRANCH}:${BASE_BRANCH}" >/dev/null 2>&1 || true
   git -C "${REPO_ROOT}" checkout -B "${PR_BRANCH}" "origin/${BASE_BRANCH}"
