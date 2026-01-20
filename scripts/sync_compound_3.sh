@@ -74,20 +74,14 @@ else
 fi
 
 pr_list_url="${GITHUB_API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/pulls?head=${REPO_OWNER}:${PR_BRANCH}&base=${BASE_BRANCH}&state=open"
-open_pr_number="$(
+open_pr_exists="$(
   curl -sS -L -H "Accept: application/vnd.github.v3+json" \
     ${GH_TOKEN:+-H "Authorization: token ${GH_TOKEN}"} \
-    "${pr_list_url}" | python - <<'PY'
-import json
-import sys
-
-data = json.load(sys.stdin)
-print(data[0]["number"] if data else "")
-PY
+    "${pr_list_url}" | grep -q '"number"' && echo "yes" || echo ""
 )"
 
-if [[ -n "${open_pr_number}" ]]; then
-  echo "Found open PR #${open_pr_number} for ${PR_BRANCH} -> ${BASE_BRANCH}."
+if [[ -n "${open_pr_exists}" ]]; then
+  echo "Found open PR for ${PR_BRANCH} -> ${BASE_BRANCH}."
   if git -C "${REPO_ROOT}" fetch origin "${PR_BRANCH}:${PR_BRANCH}" >/dev/null 2>&1; then
     if git -C "${REPO_ROOT}" show "${PR_BRANCH}:${TARGET_PATH}" > "${branch_tmp_file}" 2>/dev/null; then
       if cmp -s "${tmp_file}" "${branch_tmp_file}"; then
@@ -122,7 +116,7 @@ git -C "${REPO_ROOT}" config user.email "${GIT_AUTHOR_EMAIL}"
 git -C "${REPO_ROOT}" commit -m "${COMMIT_MESSAGE}"
 git -C "${REPO_ROOT}" push origin "${PR_BRANCH}"
 
-if [[ -z "${open_pr_number}" ]]; then
+if [[ -z "${open_pr_exists}" ]]; then
   echo "Creating pull request for ${PR_BRANCH} -> ${BASE_BRANCH}."
   pr_payload="$(
     python - <<'PY'
@@ -144,5 +138,5 @@ PY
     -d "${pr_payload}" \
     "${GITHUB_API_BASE}/repos/${REPO_OWNER}/${REPO_NAME}/pulls" >/dev/null
 else
-  echo "PR #${open_pr_number} already open; new commit added to existing PR."
+  echo "PR already open; new commit added to existing PR."
 fi
