@@ -170,48 +170,30 @@ if [[ -z "${EXISTING_PR}" ]]; then
     rm -f "${tmp_file}" "${PR_FILE_TMP}" "${pr_response_file}"
   }
   
-  # Make API call: save response to file, capture HTTP code from stdout
-  # -w outputs HTTP code after body is written to file
+  # Make API call and capture response
   http_code="$(curl "${curl_args[@]}" -H "Accept: application/vnd.github.v3+json" \
     -w "%{http_code}" -o "${pr_response_file}" \
     -X POST -d "${pr_data}" "${pr_url}" 2>&1 || echo "000")"
   
-  # Clean up HTTP code (remove any trailing newlines/spaces)
   http_code="$(echo -n "${http_code}" | tr -d '\n\r ')"
   pr_response="$(cat "${pr_response_file}")"
   
-  echo "DEBUG: HTTP code received: '${http_code}'" >&2
-  if [[ ${#pr_response} -eq 0 ]]; then
-    echo "DEBUG: Response body is empty!" >&2
-  else
-    echo "DEBUG: Response preview: ${pr_response:0:200}..." >&2
-  fi
-  
-  # Check HTTP status code (201 = Created)
+  # Check HTTP status code
   if [[ "${http_code}" != "201" ]]; then
-    # Extract error message if available
     if echo "${pr_response}" | grep -q '"message"'; then
       ERROR_MSG="$(echo "${pr_response}" | grep -o '"message":"[^"]*"' | head -1 | sed 's/"message":"\(.*\)"/\1/')"
       echo "Failed to create PR (HTTP ${http_code}). Error: ${ERROR_MSG}" >&2
     else
       echo "Failed to create PR (HTTP ${http_code})." >&2
     fi
-    echo "Full response: ${pr_response}" >&2
     rm -f "${pr_response_file}"
     exit 1
   fi
   
-  # Check if we got a valid PR response
-  if echo "${pr_response}" | grep -q '"number"'; then
-    NEW_PR_NUMBER="$(echo "${pr_response}" | grep -o '"number":[0-9]*' | head -1 | grep -o '[0-9]*')"
-    NEW_PR_HTML_URL="$(echo "${pr_response}" | grep -o '"html_url":"[^"]*"' | head -1 | sed 's/"html_url":"\(.*\)"/\1/')"
-    echo "Created PR #${NEW_PR_NUMBER}: ${NEW_PR_HTML_URL}"
-  else
-    echo "Failed to create PR. Unexpected response format." >&2
-    echo "Response: ${pr_response}" >&2
-    rm -f "${pr_response_file}"
-    exit 1
-  fi
+  # Extract PR number and URL from response
+  NEW_PR_NUMBER="$(echo "${pr_response}" | grep -o '"number":[0-9]*' | head -1 | grep -o '[0-9]*')"
+  NEW_PR_HTML_URL="$(echo "${pr_response}" | grep -o '"html_url":"[^"]*"' | head -1 | sed 's/"html_url":"\(.*\)"/\1/')"
+  echo "Created PR #${NEW_PR_NUMBER}: ${NEW_PR_HTML_URL}"
   
   rm -f "${pr_response_file}"
 else
