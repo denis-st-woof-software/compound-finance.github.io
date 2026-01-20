@@ -164,38 +164,23 @@ if [[ -z "${EXISTING_PR}" ]]; then
   pr_data="{\"title\":\"${PR_TITLE_ESC}\",\"body\":\"${PR_BODY_ESC}\",\"head\":\"${PR_BRANCH_NAME}\",\"base\":\"master\"}"
   pr_url="${GITHUB_API_BASE}/repos/${TARGET_OWNER}/${TARGET_REPO}/pulls"
   
-  # Create temp files for response
-  pr_response_file="$(mktemp)"
-  cleanup() {
-    rm -f "${tmp_file}" "${PR_FILE_TMP}" "${pr_response_file}"
-  }
+  # No temp files needed - we only check HTTP status code
   
-  # Make API call and capture response
+  # Make API call and check HTTP status code
   http_code="$(curl "${curl_args[@]}" -H "Accept: application/vnd.github.v3+json" \
-    -w "%{http_code}" -o "${pr_response_file}" \
+    -w "%{http_code}" -o /dev/null \
     -X POST -d "${pr_data}" "${pr_url}" 2>&1 || echo "000")"
   
-  http_code="$(echo -n "${http_code}" | tr -d '\n\r ')"
-  pr_response="$(cat "${pr_response_file}")"
+  # Extract HTTP code (last 3 characters)
+  http_code="$(echo -n "${http_code}" | tail -c 3)"
   
   # Check HTTP status code
-  if [[ "${http_code}" != "201" ]]; then
-    if echo "${pr_response}" | grep -q '"message"'; then
-      ERROR_MSG="$(echo "${pr_response}" | grep -o '"message":"[^"]*"' | head -1 | sed 's/"message":"\(.*\)"/\1/')"
-      echo "Failed to create PR (HTTP ${http_code}). Error: ${ERROR_MSG}" >&2
-    else
-      echo "Failed to create PR (HTTP ${http_code})." >&2
-    fi
-    rm -f "${pr_response_file}"
+  if [[ "${http_code}" == "201" ]]; then
+    echo "PR created"
+  else
+    echo "Failed to create PR (HTTP ${http_code})" >&2
     exit 1
   fi
-  
-  # Extract PR number and URL from response
-  NEW_PR_NUMBER="$(echo "${pr_response}" | grep -o '"number":[0-9]*' | head -1 | grep -o '[0-9]*')"
-  NEW_PR_HTML_URL="$(echo "${pr_response}" | grep -o '"html_url":"[^"]*"' | head -1 | sed 's/"html_url":"\(.*\)"/\1/')"
-  echo "Created PR #${NEW_PR_NUMBER}: ${NEW_PR_HTML_URL}"
-  
-  rm -f "${pr_response_file}"
 else
   echo "Updated existing PR #${EXISTING_PR}"
 fi
