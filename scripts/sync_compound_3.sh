@@ -163,16 +163,38 @@ if [[ -z "${EXISTING_PR}" ]]; then
   
   pr_data="{\"title\":\"${PR_TITLE_ESC}\",\"body\":\"${PR_BODY_ESC}\",\"head\":\"${PR_BRANCH_NAME}\",\"base\":\"master\"}"
   pr_url="${GITHUB_API_BASE}/repos/${TARGET_OWNER}/${TARGET_REPO}/pulls"
-  pr_response="$(curl "${curl_args[@]}" -H "Accept: application/vnd.github.v3+json" -X POST -d "${pr_data}" "${pr_url}")"
   
-  # Check for errors first
-  if echo "${pr_response}" | grep -q '"message"'; then
-    ERROR_MSG="$(echo "${pr_response}" | grep -o '"message":"[^"]*"' | head -1 | sed 's/"message":"\(.*\)"/\1/')"
-    echo "Failed to create PR. Error: ${ERROR_MSG}" >&2
+  # Create temp files for response and HTTP code
+  pr_response_file="$(mktemp)"
+  http_code_file="$(mktemp)"
+  cleanup() {
+    rm -f "${tmp_file}" "${PR_FILE_TMP}" "${pr_response_file}" "${http_code_file}"
+  }
+  
+  # Make API call and capture HTTP status code
+  curl "${curl_args[@]}" -H "Accept: application/vnd.github.v3+json" \
+    -w "%{http_code}" -o "${pr_response_file}" \
+    -X POST -d "${pr_data}" "${pr_url}" > "${http_code_file}" 2>&1 || true
+  
+  http_code="$(cat "${http_code_file}" | tr -d '\n\r ')"
+  
+  pr_response="$(cat "${pr_response_file}")"
+  
+  # Check HTTP status code (201 = Created)
+  if [[ "${http_code}" != "201" ]]; then
+    # Extract error message if available
+    if echo "${pr_response}" | grep -q '"message"'; then
+      ERROR_MSG="$(echo "${pr_response}" | grep -o '"message":"[^"]*"' | head -1 | sed 's/"message":"\(.*\)"/\1/')"
+      echo "Failed to create PR (HTTP ${http_code}). Error: ${ERROR_MSG}" >&2
+    else
+      echo "Failed to create PR (HTTP ${http_code})." >&2
+    fi
     echo "Full response: ${pr_response}" >&2
+    rm -f "${pr_response_file}" "${http_code_file}"
     exit 1
   fi
   
+  # Check if we got a valid PR response
   if echo "${pr_response}" | grep -q '"number"'; then
     NEW_PR_NUMBER="$(echo "${pr_response}" | grep -o '"number":[0-9]*' | head -1 | grep -o '[0-9]*')"
     NEW_PR_HTML_URL="$(echo "${pr_response}" | grep -o '"html_url":"[^"]*"' | head -1 | sed 's/"html_url":"\(.*\)"/\1/')"
@@ -180,8 +202,11 @@ if [[ -z "${EXISTING_PR}" ]]; then
   else
     echo "Failed to create PR. Unexpected response format." >&2
     echo "Response: ${pr_response}" >&2
+    rm -f "${pr_response_file}" "${http_code_file}"
     exit 1
   fi
+  
+  rm -f "${pr_response_file}" "${http_code_file}"
 else
   echo "Updated existing PR #${EXISTING_PR}"
 fi
