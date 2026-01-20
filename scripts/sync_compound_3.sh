@@ -116,21 +116,22 @@ git -C "${REPO_ROOT}" config user.email "${GIT_AUTHOR_EMAIL}"
 git -C "${REPO_ROOT}" commit -m "${COMMIT_MESSAGE}"
 git -C "${REPO_ROOT}" push origin "${PR_BRANCH}"
 
+json_escape() {
+  local value="$1"
+  value="${value//\\/\\\\}"
+  value="${value//\"/\\\"}"
+  value="${value//$'\n'/\\n}"
+  printf '%s' "${value}"
+}
+
 if [[ -z "${open_pr_exists}" ]]; then
   echo "Creating pull request for ${PR_BRANCH} -> ${BASE_BRANCH}."
   pr_payload="$(
-    python - <<'PY'
-import json
-import os
-
-payload = {
-  "title": os.environ["PR_TITLE"],
-  "head": os.environ["PR_BRANCH"],
-  "base": os.environ["BASE_BRANCH"],
-  "body": os.environ.get("PR_BODY", ""),
-}
-print(json.dumps(payload))
-PY
+    printf '{"title":"%s","head":"%s","base":"%s","body":"%s"}' \
+      "$(json_escape "${PR_TITLE}")" \
+      "$(json_escape "${PR_BRANCH}")" \
+      "$(json_escape "${BASE_BRANCH}")" \
+      "$(json_escape "${PR_BODY}")"
   )"
 
   curl -sS -L -H "Accept: application/vnd.github.v3+json" \
