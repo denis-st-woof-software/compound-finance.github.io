@@ -22,6 +22,9 @@ required_vars=(
   GIT_AUTHOR_EMAIL
   COMMIT_MESSAGE
   GITHUB_API_BASE
+  PR_BRANCH_NAME
+  PR_TITLE
+  PR_BODY
 )
 
 for var_name in "${required_vars[@]}"; do
@@ -34,39 +37,151 @@ done
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 TARGET_ABS_PATH="${REPO_ROOT}/${TARGET_PATH}"
 
+# Get current repository owner and name from git remote
+GIT_REMOTE_URL="$(git -C "${REPO_ROOT}" remote get-url origin)"
+if [[ "${GIT_REMOTE_URL}" =~ github\.com[:/]([^/]+)/([^/]+)(\.git)?$ ]]; then
+  TARGET_OWNER="${BASH_REMATCH[1]}"
+  TARGET_REPO="${BASH_REMATCH[2]%.git}"
+else
+  echo "Failed to parse repository owner/name from git remote: ${GIT_REMOTE_URL}" >&2
+  exit 1
+fi
+
 tmp_file="$(mktemp)"
+PR_FILE_TMP=""
 cleanup() {
-  rm -f "${tmp_file}"
+  rm -f "${tmp_file}" "${PR_FILE_TMP}"
 }
 trap cleanup EXIT
 
-api_url="${GITHUB_API_BASE}/repos/${SOURCE_OWNER}/${SOURCE_REPO}/contents/${SOURCE_PATH}?ref=${SOURCE_BRANCH}"
-
-curl_args=(-sS -L -H "Accept: application/vnd.github.v3.raw")
+# Setup curl arguments with authentication
+curl_args=(-sS -L)
 if [[ -n "${GH_TOKEN:-}" ]]; then
   curl_args+=(-H "Authorization: token ${GH_TOKEN}")
 fi
 
+# Download source file
+api_url="${GITHUB_API_BASE}/repos/${SOURCE_OWNER}/${SOURCE_REPO}/contents/${SOURCE_PATH}?ref=${SOURCE_BRANCH}"
 echo "Downloading source file from ${api_url}"
-curl "${curl_args[@]}" "${api_url}" -o "${tmp_file}"
+curl "${curl_args[@]}" -H "Accept: application/vnd.github.v3.raw" "${api_url}" -o "${tmp_file}"
 
 mkdir -p "$(dirname "${TARGET_ABS_PATH}")"
 
-if [[ -f "${TARGET_ABS_PATH}" ]] && cmp -s "${tmp_file}" "${TARGET_ABS_PATH}"; then
-  echo "No changes detected. Exiting."
-  exit 0
-fi
-
-cp "${tmp_file}" "${TARGET_ABS_PATH}"
-
-git -C "${REPO_ROOT}" add "${TARGET_PATH}"
-
-if git -C "${REPO_ROOT}" diff --cached --quiet; then
-  echo "No changes to commit after staging. Exiting."
-  exit 0
-fi
-
+# Configure git user
 git -C "${REPO_ROOT}" config user.name "${GIT_AUTHOR_NAME}"
 git -C "${REPO_ROOT}" config user.email "${GIT_AUTHOR_EMAIL}"
+
+# Fetch all branches (including master) to ensure we have latest refs, but don't touch master
+git -C "${REPO_ROOT}" fetch origin
+
+# Function to check if branch exists (locally or remotely)
+branch_exists() {
+  local branch_name="$1"
+  git -C "${REPO_ROOT}" rev-parse --verify "${branch_name}" >/dev/null 2>&1 || \
+  git -C "${REPO_ROOT}" ls-remote --exit-code --heads origin "${branch_name}" >/dev/null 2>&1
+}
+
+# Function to get existing PR number (returns empty string if not found)
+get_existing_pr() {
+  local branch_name="$1"
+  local api_url="${GITHUB_API_BASE}/repos/${TARGET_OWNER}/${TARGET_REPO}/pulls?head=${TARGET_OWNER}:${branch_name}&state=open"
+  
+  local response
+  response="$(curl "${curl_args[@]}" -H "Accept: application/vnd.github.v3+json" "${api_url}")"
+  
+  # Check if we got any PRs
+  if echo "${response}" | grep -q '"number"'; then
+    echo "${response}" | grep -o '"number":[0-9]*' | head -1 | grep -o '[0-9]*'
+  fi
+}
+
+
+# Function to get file content from a specific branch
+get_file_from_branch() {
+  local branch_name="$1"
+  local file_path="$2"
+  local api_url="${GITHUB_API_BASE}/repos/${TARGET_OWNER}/${TARGET_REPO}/contents/${file_path}?ref=${branch_name}"
+  
+  curl "${curl_args[@]}" -H "Accept: application/vnd.github.v3.raw" "${api_url}" 2>/dev/null || echo ""
+}
+
+# Checkout or create PR branch
+if branch_exists "${PR_BRANCH_NAME}"; then
+  echo "Branch ${PR_BRANCH_NAME} already exists."
+  git -C "${REPO_ROOT}" fetch origin "${PR_BRANCH_NAME}"
+  # Use -B to create or reset branch to origin
+  git -C "${REPO_ROOT}" checkout -B "${PR_BRANCH_NAME}" "origin/${PR_BRANCH_NAME}"
+else
+  echo "Creating new branch ${PR_BRANCH_NAME} from origin/master..."
+  git -C "${REPO_ROOT}" checkout -b "${PR_BRANCH_NAME}" "origin/master"
+fi
+
+# Check if PR exists
+EXISTING_PR="$(get_existing_pr "${PR_BRANCH_NAME}")"
+
+if [[ -n "${EXISTING_PR}" ]]; then
+  echo "Found existing open PR #${EXISTING_PR}"
+  
+  # Get current file content from PR branch and compare
+  PR_FILE_CONTENT="$(get_file_from_branch "${PR_BRANCH_NAME}" "${TARGET_PATH}")"
+  PR_FILE_TMP="$(mktemp)"
+  printf '%s' "${PR_FILE_CONTENT}" > "${PR_FILE_TMP}"
+  
+  # Compare with downloaded content
+  if cmp -s "${tmp_file}" "${PR_FILE_TMP}" 2>/dev/null; then
+    echo "Content in existing PR #${EXISTING_PR} is identical to downloaded content. No action needed."
+    exit 0
+  fi
+  
+  echo "Content differs from existing PR. Will update the PR branch."
+fi
+
+# Apply new content and check if there are changes
+cp "${tmp_file}" "${TARGET_ABS_PATH}"
+git -C "${REPO_ROOT}" add "${TARGET_PATH}"
+
+# Check if there are actual changes to commit
+if git -C "${REPO_ROOT}" diff --cached --quiet; then
+  echo "No changes to commit after staging. Content is already up to date."
+  exit 0
+fi
+
+# Commit changes
 git -C "${REPO_ROOT}" commit -m "${COMMIT_MESSAGE}"
-git -C "${REPO_ROOT}" push origin master
+
+# Push branch (-u is safe even if already set)
+echo "Pushing branch ${PR_BRANCH_NAME}..."
+git -C "${REPO_ROOT}" push -u origin "${PR_BRANCH_NAME}"
+  
+# Create PR if it doesn't exist
+if [[ -z "${EXISTING_PR}" ]]; then
+  echo "Creating pull request..."
+  
+  # Escape JSON special characters in PR title and body
+  PR_TITLE_ESC=$(printf '%s' "${PR_TITLE}" | sed 's/\\/\\\\/g; s/"/\\"/g')
+  PR_BODY_ESC=$(printf '%s' "${PR_BODY}" | sed 's/\\/\\\\/g; s/"/\\"/g')
+  
+  pr_data="{\"title\":\"${PR_TITLE_ESC}\",\"body\":\"${PR_BODY_ESC}\",\"head\":\"${PR_BRANCH_NAME}\",\"base\":\"master\"}"
+  pr_url="${GITHUB_API_BASE}/repos/${TARGET_OWNER}/${TARGET_REPO}/pulls"
+  pr_response="$(curl "${curl_args[@]}" -H "Accept: application/vnd.github.v3+json" -X POST -d "${pr_data}" "${pr_url}")"
+  
+  # Check for errors first
+  if echo "${pr_response}" | grep -q '"message"'; then
+    ERROR_MSG="$(echo "${pr_response}" | grep -o '"message":"[^"]*"' | head -1 | sed 's/"message":"\(.*\)"/\1/')"
+    echo "Failed to create PR. Error: ${ERROR_MSG}" >&2
+    echo "Full response: ${pr_response}" >&2
+    exit 1
+  fi
+  
+  if echo "${pr_response}" | grep -q '"number"'; then
+    NEW_PR_NUMBER="$(echo "${pr_response}" | grep -o '"number":[0-9]*' | head -1 | grep -o '[0-9]*')"
+    NEW_PR_HTML_URL="$(echo "${pr_response}" | grep -o '"html_url":"[^"]*"' | head -1 | sed 's/"html_url":"\(.*\)"/\1/')"
+    echo "Created PR #${NEW_PR_NUMBER}: ${NEW_PR_HTML_URL}"
+  else
+    echo "Failed to create PR. Unexpected response format." >&2
+    echo "Response: ${pr_response}" >&2
+    exit 1
+  fi
+else
+  echo "Updated existing PR #${EXISTING_PR}"
+fi
