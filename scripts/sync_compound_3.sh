@@ -62,10 +62,16 @@ fi
 
 extract_pr_number() {
   # Extract first PR number from GitHub API list response using grep only.
-  printf '%s' "$1" \
-    | grep -o '"number"[[:space:]]*:[[:space:]]*[0-9]\+' \
-    | head -1 \
-    | grep -o '[0-9]\+'
+  local pr_number
+  pr_number="$(
+    printf '%s' "$1" \
+      | grep -o '"number"[[:space:]]*:[[:space:]]*[0-9]\+' \
+      | head -1 \
+      | grep -o '[0-9]\+' \
+      || true
+  )"
+  printf '%s' "${pr_number}"
+  return 0
 }
 
 # Download source file
