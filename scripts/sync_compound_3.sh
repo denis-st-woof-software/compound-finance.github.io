@@ -60,6 +60,14 @@ if [[ -n "${GH_TOKEN:-}" ]]; then
   curl_args+=(-H "Authorization: token ${GH_TOKEN}")
 fi
 
+extract_pr_number() {
+  # Extract first PR number from GitHub API list response using grep only.
+  printf '%s' "$1" \
+    | grep -o '"number"[[:space:]]*:[[:space:]]*[0-9]\+' \
+    | head -1 \
+    | grep -o '[0-9]\+'
+}
+
 # Download source file
 api_url="${GITHUB_API_BASE}/repos/${SOURCE_OWNER}/${SOURCE_REPO}/contents/${SOURCE_PATH}?ref=${SOURCE_BRANCH}"
 echo "Downloading source file from ${api_url}"
@@ -88,10 +96,7 @@ fi
 # Check if PR exists
 pr_check_url="${GITHUB_API_BASE}/repos/${TARGET_OWNER}/${TARGET_REPO}/pulls?head=${TARGET_OWNER}:${PR_BRANCH_NAME}&state=open"
 pr_check_response="$(curl "${curl_args[@]}" -H "Accept: application/vnd.github.v3+json" "${pr_check_url}")"
-EXISTING_PR=""
-if echo "${pr_check_response}" | grep -q '"number"'; then
-  EXISTING_PR="$(echo "${pr_check_response}" | grep -o '"number":[0-9]*' | head -1 | grep -o '[0-9]*')"
-fi
+EXISTING_PR="$(extract_pr_number "${pr_check_response}")"
 
 if [[ -n "${EXISTING_PR}" ]]; then
   echo "Found existing open PR #${EXISTING_PR}"
@@ -126,26 +131,28 @@ git -C "${REPO_ROOT}" commit -m "${COMMIT_MESSAGE}"
 echo "Pushing branch ${PR_BRANCH_NAME}..."
 git -C "${REPO_ROOT}" push -u origin "${PR_BRANCH_NAME}"
 
-# Create PR if it doesn't exist
-if [[ -z "${EXISTING_PR}" ]]; then
-  echo "Creating pull request..."
-
-  # Create PR
-  pr_data="{\"title\":\"${PR_TITLE}\",\"body\":\"${PR_BODY}\",\"head\":\"${PR_BRANCH_NAME}\",\"base\":\"master\"}"
-
-  pr_url="${GITHUB_API_BASE}/repos/${TARGET_OWNER}/${TARGET_REPO}/pulls"
-
-  http_code="$(curl "${curl_args[@]}" -H "Accept: application/vnd.github.v3+json" \
-    -w "%{http_code}" -o /dev/null \
-    -X POST -d "${pr_data}" "${pr_url}" 2>&1 || echo "000")"
-  http_code="$(echo -n "${http_code}" | tail -c 3)"
-
-  if [[ "${http_code}" == "201" ]]; then
-    echo "PR created"
-  else
-    echo "Failed to create PR (HTTP ${http_code})" >&2
-    exit 1
-  fi
-else
+# If PR already exists, stop here after updating the branch
+if [[ -n "${EXISTING_PR}" ]]; then
   echo "Updated existing PR #${EXISTING_PR}"
+  exit 0
+fi
+
+# Create PR (only when none exists)
+echo "Creating pull request..."
+
+# Create PR
+pr_data="{\"title\":\"${PR_TITLE}\",\"body\":\"${PR_BODY}\",\"head\":\"${PR_BRANCH_NAME}\",\"base\":\"master\"}"
+
+pr_url="${GITHUB_API_BASE}/repos/${TARGET_OWNER}/${TARGET_REPO}/pulls"
+
+http_code="$(curl "${curl_args[@]}" -H "Accept: application/vnd.github.v3+json" \
+  -w "%{http_code}" -o /dev/null \
+  -X POST -d "${pr_data}" "${pr_url}" 2>&1 || echo "000")"
+http_code="$(echo -n "${http_code}" | tail -c 3)"
+
+if [[ "${http_code}" == "201" ]]; then
+  echo "PR created"
+else
+  echo "Failed to create PR (HTTP ${http_code})" >&2
+  exit 1
 fi
