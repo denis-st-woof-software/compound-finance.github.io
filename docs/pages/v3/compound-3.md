@@ -18,7 +18,7 @@ deployments:
     blockscan_origin: 'https://etherscan.io/'
     contracts:
       cUSDCv3: '0xc3d688B66703497DAA19211EEdff47f25384cdc3'
-      cUSDCv3 Implementation: '0xA0332AaFD9E9164A95b1fA521f8a479125573451'
+      cUSDCv3 Implementation: '0xf1c4f39EdBdfECF8628a822dC15d1aA882118DAC'
       cUSDCv3 Ext: '0xA70a0227028aD005F4Fc9376a82cd1462e3AAedC'
       Configurator: '0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3'
       Configurator Implementation: '0xcFC1fA6b7ca982176529899D99af6473aD80DF4F'
@@ -77,6 +77,28 @@ deployments:
         Supply Cap: '2.60M'
         Supply Cap Raw: '2600000000000000000000000'
         Price Feed: '0x553303d460EE0afB37EdFf9bE42922D8FF63220e'
+      LINK:
+        address: '0x514910771AF9Ca656af840dff83E8264EcF986CA'
+        Borrow CF: '73.0%'
+        Borrow CF Raw: '730000000000000000'
+        Liquidation CF: '79.0%'
+        Liquidation CF Raw: '790000000000000000'
+        Liquidation Penalty: '17.00%'
+        Liquidation Penalty Raw: '830000000000000000'
+        Supply Cap: '2.00M'
+        Supply Cap Raw: '2000000000000000000000000'
+        Price Feed: '0x83B34662f65532e611A87EBed38063Dec889D5A7'
+      wstETH:
+        address: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0'
+        Borrow CF: '82.0%'
+        Borrow CF Raw: '820000000000000000'
+        Liquidation CF: '86.0%'
+        Liquidation CF Raw: '860000000000000000'
+        Liquidation Penalty: '9.00%'
+        Liquidation Penalty Raw: '910000000000000000'
+        Supply Cap: '75.00K'
+        Supply Cap Raw: '75000000000000000000000'
+        Price Feed: '0xA2699232B341881B1Ed85d91592b7c259E029aCf'
       cbBTC:
         address: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf'
         Borrow CF: '80.0%'
@@ -140,8 +162,8 @@ deployments:
         Liquidation CF Raw: '900000000000000000'
         Liquidation Penalty: '5.00%'
         Liquidation Penalty Raw: '950000000000000000'
-        Supply Cap: '1.50K'
-        Supply Cap Raw: '1500000000000000000000'
+        Supply Cap: '750'
+        Supply Cap Raw: '750000000000000000000'
         Price Feed: '0xD6a48f6f687A5FeF8A69834C49514B747012cf1c'
       USDe:
         address: '0x4c9EDD5852cd905f086C759E8383e09bff1E68B3'
@@ -151,15 +173,15 @@ deployments:
         Liquidation CF Raw: '940000000000000000'
         Liquidation Penalty: '4.00%'
         Liquidation Penalty Raw: '960000000000000000'
-        Supply Cap: '30.00M'
-        Supply Cap Raw: '30000000000000000000000000'
+        Supply Cap: '15.00M'
+        Supply Cap Raw: '15000000000000000000000000'
         Price Feed: '0xa569d910839Ae8865Da8F8e70FfFb0cBA869F961'
   Ethereum Mainnet - USDS Base:
     tab_text: Mainnet USDS
     blockscan_origin: 'https://etherscan.io/'
     contracts:
       cUSDSv3: '0x5D409e56D886231aDAf00c8775665AD0f9897b56'
-      cUSDSv3 Implementation: '0x5ACaE76A83D9770370989738452aD3a8be3c54Dd'
+      cUSDSv3 Implementation: '0x4e18F614134bcf8d70DE6DB9abB9d40827b2C292'
       cUSDSv3 Ext: '0xd4eC911B8FD79139736950235a93d3ea9c3f68ed'
       Configurator: '0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3'
       Configurator Implementation: '0xcFC1fA6b7ca982176529899D99af6473aD80DF4F'
@@ -193,8 +215,8 @@ deployments:
         Liquidation CF Raw: '750000000000000000'
         Liquidation Penalty: '15.00%'
         Liquidation Penalty Raw: '850000000000000000'
-        Supply Cap: '50.00M'
-        Supply Cap Raw: '50000000000000000000000000'
+        Supply Cap: '25.00M'
+        Supply Cap Raw: '25000000000000000000000000'
         Price Feed: '0xa569d910839Ae8865Da8F8e70FfFb0cBA869F961'
       cbBTC:
         address: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf'
@@ -215,8 +237,8 @@ deployments:
         Liquidation CF Raw: '850000000000000000'
         Liquidation Penalty: '10.00%'
         Liquidation Penalty Raw: '900000000000000000'
-        Supply Cap: '285'
-        Supply Cap Raw: '285000000000000000000'
+        Supply Cap: '142'
+        Supply Cap Raw: '142000000000000000000'
         Price Feed: '0x8350b7De6a6a2C1368E7D4Bd968190e13E354297'
       wstETH:
         address: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0'
@@ -248,8 +270,8 @@ deployments:
         Liquidation CF Raw: '750000000000000000'
         Liquidation Penalty: '10.00%'
         Liquidation Penalty Raw: '900000000000000000'
-        Supply Cap: '12.00K'
-        Supply Cap Raw: '12000000000000000000000'
+        Supply Cap: '6.00K'
+        Supply Cap Raw: '6000000000000000000000'
         Price Feed: '0x4F12633d511dC3049DE1ea923b7047fBeD0070D2'
       SKY:
         address: '0x56072C95FAA701256059aa122697B133aDEd9279'
@@ -259,8 +281,8 @@ deployments:
         Liquidation CF Raw: '790000000000000000'
         Liquidation Penalty: '15.00%'
         Liquidation Penalty Raw: '850000000000000000'
-        Supply Cap: '96.00M'
-        Supply Cap Raw: '96000000000000000000000000'
+        Supply Cap: '48.00M'
+        Supply Cap Raw: '48000000000000000000000000'
         Price Feed: '0xEF819FE60af67698567f03095A029AE1a1935007'
       deUSD:
         address: '0x15700B564Ca08D9439C58cA5053166E8317aa138'
@@ -289,7 +311,7 @@ deployments:
     blockscan_origin: 'https://etherscan.io/'
     contracts:
       cUSDTv3: '0x3Afdc9BCA9213A35503b077a6072F3D0d5AB0840'
-      cUSDTv3 Implementation: '0x6f654c583454859F535f6b720981cc939D1b036E'
+      cUSDTv3 Implementation: '0x93ffA70d00e68bc607B753Cc70Ded89aD2e3bb5C'
       cUSDTv3 Ext: '0xe3458a0BdBd5A413d3731595C5Eb7C4CD6a14DD1'
       Configurator: '0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3'
       Configurator Implementation: '0xcFC1fA6b7ca982176529899D99af6473aD80DF4F'
@@ -422,8 +444,8 @@ deployments:
         Liquidation CF Raw: '850000000000000000'
         Liquidation Penalty: '5.00%'
         Liquidation Penalty Raw: '950000000000000000'
-        Supply Cap: '4.00K'
-        Supply Cap Raw: '4000000000000000000000'
+        Supply Cap: '2.00K'
+        Supply Cap Raw: '2000000000000000000000'
         Price Feed: '0x60F2058379716A64a7A5d29219397e79bC552194'
       weETH:
         address: '0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee'
@@ -477,15 +499,15 @@ deployments:
         Liquidation CF Raw: '940000000000000000'
         Liquidation Penalty: '4.00%'
         Liquidation Penalty Raw: '960000000000000000'
-        Supply Cap: '30.00M'
-        Supply Cap Raw: '30000000000000000000000000'
+        Supply Cap: '15.00M'
+        Supply Cap Raw: '15000000000000000000000000'
         Price Feed: '0xa569d910839Ae8865Da8F8e70FfFb0cBA869F961'
   Ethereum Mainnet - WBTC Base:
     tab_text: Mainnet WBTC
     blockscan_origin: 'https://etherscan.io/'
     contracts:
       cWBTCv3: '0xe85Dc543813B8c2CFEaAc371517b925a166a9293'
-      cWBTCv3 Implementation: '0x1C0C89c1Fa07E1dBfCB99ddb80c57252498c82B2'
+      cWBTCv3 Implementation: '0x338e887D3F21EaA0dBa5499acA1840CE1eEA0a1c'
       cWBTCv3 Ext: '0x4f4D5A808E2448cB12df7aC12EFb12888FD9BDd5'
       Configurator: '0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3'
       Configurator Implementation: '0xcFC1fA6b7ca982176529899D99af6473aD80DF4F'
@@ -549,7 +571,7 @@ deployments:
     blockscan_origin: 'https://etherscan.io/'
     contracts:
       cWETHv3: '0xA17581A9E3356d9A858b789D68B4d866e593aE94'
-      cWETHv3 Implementation: '0x2BEa101d992b58DA3F52C4c2aaeb49d33f7DCE14'
+      cWETHv3 Implementation: '0x42bF1E67039Aed53fd7A63628dfDE468381cCb8E'
       cWETHv3 Ext: '0x16F3532e6AF45A2C51B6C77b1267cEF34A9cf3B3'
       Configurator: '0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3'
       Configurator Implementation: '0xcFC1fA6b7ca982176529899D99af6473aD80DF4F'
@@ -572,8 +594,8 @@ deployments:
         Liquidation CF Raw: '930000000000000000'
         Liquidation Penalty: '2.50%'
         Liquidation Penalty Raw: '975000000000000000'
-        Supply Cap: '10.00K'
-        Supply Cap Raw: '10000000000000000000000'
+        Supply Cap: '5.00K'
+        Supply Cap Raw: '5000000000000000000000'
         Price Feed: '0x23a982b74a3236A5F2297856d4391B2edBBB5549'
       wstETH:
         address: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0'
@@ -594,9 +616,9 @@ deployments:
         Liquidation CF Raw: '930000000000000000'
         Liquidation Penalty: '2.50%'
         Liquidation Penalty Raw: '975000000000000000'
-        Supply Cap: '30.00K'
-        Supply Cap Raw: '30000000000000000000000'
-        Price Feed: '0x9feAc5a70435ef209F4013D46945AC1d4cba9397'
+        Supply Cap: '15.00K'
+        Supply Cap Raw: '15000000000000000000000'
+        Price Feed: '0x584A6BB85FC446642217bE0F6491C9D652f33B72'
       rsETH:
         address: '0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7'
         Borrow CF: '90.0%'
@@ -627,8 +649,8 @@ deployments:
         Liquidation CF Raw: '850000000000000000'
         Liquidation Penalty: '10.00%'
         Liquidation Penalty Raw: '900000000000000000'
-        Supply Cap: '10.00K'
-        Supply Cap Raw: '10000000000000000000000'
+        Supply Cap: '2.50K'
+        Supply Cap Raw: '2500000000000000000000'
         Price Feed: '0xdf08cd1B9d40a106B49B74F70c1CCa60596edeDc'
       WBTC:
         address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'
@@ -660,8 +682,8 @@ deployments:
         Liquidation CF Raw: '850000000000000000'
         Liquidation Penalty: '5.00%'
         Liquidation Penalty Raw: '950000000000000000'
-        Supply Cap: '150'
-        Supply Cap Raw: '15000000000'
+        Supply Cap: '75'
+        Supply Cap Raw: '7500000000'
         Price Feed: '0x57A71A9C632b2e6D8b0eB9A157888A3Fc87400D1'
       rswETH:
         address: '0xFAe103DC9cf190eD75350761e95403b7b8aFa6c0'
@@ -671,8 +693,8 @@ deployments:
         Liquidation CF Raw: '850000000000000000'
         Liquidation Penalty: '10.00%'
         Liquidation Penalty Raw: '900000000000000000'
-        Supply Cap: '1.00K'
-        Supply Cap Raw: '1000000000000000000000'
+        Supply Cap: '500'
+        Supply Cap Raw: '500000000000000000000'
         Price Feed: '0x0cA9231A11c242206139A6DD8Bf532F885516F96'
       tBTC:
         address: '0x18084fbA666a33d37592fA2633fD49a74DD93a88'
@@ -682,8 +704,8 @@ deployments:
         Liquidation CF Raw: '810000000000000000'
         Liquidation Penalty: '10.00%'
         Liquidation Penalty Raw: '900000000000000000'
-        Supply Cap: '315'
-        Supply Cap Raw: '315000000000000000000'
+        Supply Cap: '157'
+        Supply Cap Raw: '157000000000000000000'
         Price Feed: '0x1933F7e5f8B0423fbAb28cE9c8C39C2cC414027B'
       ETHx:
         address: '0xA35b1B31Ce002FBF2058D22F30f95D405200A15b'
@@ -693,8 +715,8 @@ deployments:
         Liquidation CF Raw: '900000000000000000'
         Liquidation Penalty: '5.00%'
         Liquidation Penalty Raw: '950000000000000000'
-        Supply Cap: '2.10K'
-        Supply Cap Raw: '2100000000000000000000'
+        Supply Cap: '1.05K'
+        Supply Cap Raw: '1050000000000000000000'
         Price Feed: '0x9f4001c75295049Dc5D566acfB27054D1fa1af35'
       tETH:
         address: '0xD11c452fc99cF405034ee446803b6F6c1F6d5ED8'
@@ -715,8 +737,8 @@ deployments:
         Liquidation CF Raw: '910000000000000000'
         Liquidation Penalty: '5.00%'
         Liquidation Penalty Raw: '950000000000000000'
-        Supply Cap: '4.50K'
-        Supply Cap Raw: '4500000000000000000000'
+        Supply Cap: '2.25K'
+        Supply Cap Raw: '2250000000000000000000'
         Price Feed: '0x5546198BE8479Dcd69044e90F50783BA1A25A8F5'
       wOETH:
         address: '0xDcEe70654261AF21C44c093C300eD3Bb97b78192'
@@ -756,7 +778,7 @@ deployments:
     blockscan_origin: 'https://etherscan.io/'
     contracts:
       cWstETHv3: '0x3D0bb1ccaB520A66e607822fC55BC921738fAFE3'
-      cWstETHv3 Implementation: '0x400249b8244AfAc24aeDC658041E56E449B43b5d'
+      cWstETHv3 Implementation: '0x3d94DAc8CCB865287064bEfD4D065Da6434603c6'
       cWstETHv3 Ext: '0x055E53F50B84FD91c4Be367220EFD36c3d091E1f'
       Configurator: '0x316f9708bB98af7dA9c68C1C3b5e79039cD336E3'
       Configurator Implementation: '0xcFC1fA6b7ca982176529899D99af6473aD80DF4F'
@@ -790,8 +812,8 @@ deployments:
         Liquidation CF Raw: '930000000000000000'
         Liquidation Penalty: '4.00%'
         Liquidation Penalty Raw: '960000000000000000'
-        Supply Cap: '15.00K'
-        Supply Cap Raw: '15000000000000000000000'
+        Supply Cap: '7.50K'
+        Supply Cap Raw: '7500000000000000000000'
         Price Feed: '0x00C03ABc59b978ECDa0A118Ca8B0061EA6121101'
       tETH:
         address: '0xD11c452fc99cF405034ee446803b6F6c1F6d5ED8'
@@ -801,8 +823,8 @@ deployments:
         Liquidation CF Raw: '930000000000000000'
         Liquidation Penalty: '4.00%'
         Liquidation Penalty Raw: '960000000000000000'
-        Supply Cap: '5.00K'
-        Supply Cap Raw: '5000000000000000000000'
+        Supply Cap: '2.50K'
+        Supply Cap Raw: '2500000000000000000000'
         Price Feed: '0x87641f6BC5aD796ea2f30af2A79aB2CF30f74188'
       USDC:
         address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
@@ -845,15 +867,15 @@ deployments:
         Liquidation CF Raw: '930000000000000000'
         Liquidation Penalty: '4.00%'
         Liquidation Penalty Raw: '960000000000000000'
-        Supply Cap: '10.00K'
-        Supply Cap Raw: '10000000000000000000000'
+        Supply Cap: '5.00K'
+        Supply Cap Raw: '5000000000000000000000'
         Price Feed: '0xF1cEe2A82Cc42246c8C38253f118AbB6cAAd715B'
   Optimism - USDC Base:
     tab_text: Optimism USDC
     blockscan_origin: 'https://optimistic.etherscan.io/'
     contracts:
       cUSDCv3: '0x2e44e174f7D53F0212823acC11C01A11d58c5bCB'
-      cUSDCv3 Implementation: '0xD62d433A4Ca55f97Bded88641588F65271CC5cf2'
+      cUSDCv3 Implementation: '0x201f4FD1b619B542F02FE9C1607Bb16A574Af5D6'
       cUSDCv3 Ext: '0xadF7aD4Dd000Ea75667A3CDf65F3D3b7f1e9F02E'
       Configurator: '0x84E93EC6170ED630f5ebD89A1AAE72d4F63f2713'
       Configurator Implementation: '0x371DB45c7ee248dAFf4Dc1FFB67A20faa0ecFE02'
@@ -927,7 +949,7 @@ deployments:
     blockscan_origin: 'https://optimistic.etherscan.io/'
     contracts:
       cUSDTv3: '0x995E394b8B2437aC8Ce61Ee0bC610D617962B214'
-      cUSDTv3 Implementation: '0x699a196c609B9B3dB559CE5778b2827252BD24F5'
+      cUSDTv3 Implementation: '0x97F271d557f15aD602cB9E1f9BcfD813e96a9ABf'
       cUSDTv3 Ext: '0xdFb81f0EbFDfdd90143f5deBD1cd016b677d1585'
       Configurator: '0x84E93EC6170ED630f5ebD89A1AAE72d4F63f2713'
       Configurator Implementation: '0x371DB45c7ee248dAFf4Dc1FFB67A20faa0ecFE02'
@@ -1001,7 +1023,7 @@ deployments:
     blockscan_origin: 'https://optimistic.etherscan.io/'
     contracts:
       cWETHv3: '0xE36A30D249f7761327fd973001A32010b521b6Fd'
-      cWETHv3 Implementation: '0x1F0E8FaE2767305C2e65800B7C42c3A9EE1dc345'
+      cWETHv3 Implementation: '0x513C0608A9C43523B8cAE67414EfD7100b1ea966'
       cWETHv3 Ext: '0xc4aaFC9F0c52FDDa0fed972c55B136bD07552ad0'
       Configurator: '0x84E93EC6170ED630f5ebD89A1AAE72d4F63f2713'
       Configurator Implementation: '0x371DB45c7ee248dAFf4Dc1FFB67A20faa0ecFE02'
@@ -1045,8 +1067,8 @@ deployments:
         Liquidation CF Raw: '850000000000000000'
         Liquidation Penalty: '10.00%'
         Liquidation Penalty Raw: '900000000000000000'
-        Supply Cap: '60'
-        Supply Cap Raw: '6000000000'
+        Supply Cap: '30'
+        Supply Cap Raw: '3000000000'
         Price Feed: '0x4ed39CF78ffA4428DE6bcEDB8d0f5Ff84699e13D'
       USDT:
         address: '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58'
@@ -1056,8 +1078,8 @@ deployments:
         Liquidation CF Raw: '850000000000000000'
         Liquidation Penalty: '5.00%'
         Liquidation Penalty Raw: '950000000000000000'
-        Supply Cap: '10.00M'
-        Supply Cap Raw: '10000000000000'
+        Supply Cap: '5.00M'
+        Supply Cap Raw: '5000000000000'
         Price Feed: '0xDdC326838f2B5E5625306C3cf33318666f3Cf002'
       USDC:
         address: '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85'
@@ -1067,8 +1089,8 @@ deployments:
         Liquidation CF Raw: '850000000000000000'
         Liquidation Penalty: '5.00%'
         Liquidation Penalty Raw: '950000000000000000'
-        Supply Cap: '15.00M'
-        Supply Cap Raw: '15000000000000'
+        Supply Cap: '7.50M'
+        Supply Cap Raw: '7500000000000'
         Price Feed: '0x403F2083B6E220147f8a8832f0B284B4Ed5777d1'
       ezETH:
         address: '0x2416092f143378750bb29b79eD961ab195CcEea5'
@@ -1108,7 +1130,7 @@ deployments:
     blockscan_origin: 'https://uniscan.xyz/'
     contracts:
       cUSDCv3: '0x2c7118c4C88B9841FCF839074c26Ae8f035f2921'
-      cUSDCv3 Implementation: '0x6bAD2334e987106F40c50c7942d794b4E09EdFC5'
+      cUSDCv3 Implementation: '0x42A39Dc8fE95f569623C1647475089b2239831FC'
       cUSDCv3 Ext: '0x8D38A3d6B3c3B7d96D6536DA7Eef94A9d7dbC991'
       Configurator: '0x8df378453Ff9dEFFa513367CDF9b3B53726303e9'
       Configurator Implementation: '0x5404872d8f2e24b230EC9B9eC64E3855F637FB93'
@@ -1149,7 +1171,7 @@ deployments:
     blockscan_origin: 'https://uniscan.xyz/'
     contracts:
       cWETHv3: '0x6C987dDE50dB1dcDd32Cd4175778C2a291978E2a'
-      cWETHv3 Implementation: '0x51515144Cff7DC3623C52C5e91768a9955d2BEb1'
+      cWETHv3 Implementation: '0x5E58f8Af3042452F24F3b18B4191e8C111f3714b'
       cWETHv3 Ext: '0x443EA0340cb75a160F31A440722dec7b5bc3C2E9'
       Configurator: '0x8df378453Ff9dEFFa513367CDF9b3B53726303e9'
       Configurator Implementation: '0x5404872d8f2e24b230EC9B9eC64E3855F637FB93'
@@ -1215,8 +1237,8 @@ deployments:
         Liquidation CF Raw: '850000000000000000'
         Liquidation Penalty: '10.00%'
         Liquidation Penalty Raw: '900000000000000000'
-        Supply Cap: '120'
-        Supply Cap Raw: '12000000000'
+        Supply Cap: '60'
+        Supply Cap Raw: '6000000000'
         Price Feed: '0xFa454dE61b317b6535A0C462267208E8FdB89f45'
       rsETH:
         address: '0xc3eACf0612346366Db554C991D7858716db09f58'
@@ -1308,7 +1330,7 @@ deployments:
     blockscan_origin: 'https://polygonscan.com/'
     contracts:
       cUSDTv3: '0xaeB318360f27748Acb200CE616E389A6C9409a07'
-      cUSDTv3 Implementation: '0x83aBacAFaF625D84919cA769222579bC75AeA2D1'
+      cUSDTv3 Implementation: '0x956c4b84D661ddF746510dbd3733e09655958892'
       cUSDTv3 Ext: '0x2F4eAF29dfeeF4654bD091F7112926E108eF4Ed0'
       Configurator: '0x83E0F742cAcBE66349E3701B171eE2487a26e738'
       Configurator Implementation: '0x9c4ec768c28520B50860ea7a15bd7213a9fF58bf'
@@ -1363,9 +1385,9 @@ deployments:
         Liquidation CF Raw: '100000000000000'
         Liquidation Penalty: '20.00%'
         Liquidation Penalty Raw: '800000000000000000'
-        Supply Cap: '1.50M'
-        Supply Cap Raw: '1500000000000000000000000'
-        Price Feed: '0x97371dF4492605486e23Da797fA68e55Fc38a13f'
+        Supply Cap: '0'
+        Supply Cap Raw: '0'
+        Price Feed: '0x5D173813B4505701e79E654b36A95E6c1FAD4448'
       WBTC:
         address: '0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6'
         Borrow CF: '75.0%'
@@ -1484,7 +1506,7 @@ deployments:
     blockscan_origin: 'https://mantlescan.xyz/'
     contracts:
       cUSDev3: '0x606174f62cd968d8e684c645080fa694c1D7786E'
-      cUSDev3 Implementation: '0x602cc55D673f134c2D6C8085D10674EC4Df4D155'
+      cUSDev3 Implementation: '0xc59DA41a151C7D70b3Eac29D191207C51E192ed0'
       cUSDev3 Ext: '0xf528B4bCAc12dad0bFa114282b219ad706bA7f18'
       Configurator: '0xb77Cd4cD000957283D8BAf53cD782ECf029cF7DB'
       Configurator Implementation: '0x3c851CbE2740747f5cE4e8894842A313e5A3aee3'
@@ -1536,7 +1558,7 @@ deployments:
     blockscan_origin: 'https://basescan.org/'
     contracts:
       cAEROv3: '0x784efeB622244d2348d4F2522f8860B96fbEcE89'
-      cAEROv3 Implementation: '0xC89567205207E481c1162c7E8A03E27e8E619A77'
+      cAEROv3 Implementation: '0xDdbc9DD0E1400E6d8441289E2b5F47B4839350Cd'
       cAEROv3 Ext: '0xDd18688Bb75Af704f3Fb1183e459C4d4D41132D9'
       Configurator: '0x45939657d1CA34A8FA39A924B71D28Fe8431e581'
       Configurator Implementation: '0x83E0F742cAcBE66349E3701B171eE2487a26e738'
@@ -1642,7 +1664,7 @@ deployments:
     blockscan_origin: 'https://basescan.org/'
     contracts:
       cUSDCv3: '0xb125E6687d4313864e53df431d5425969c15Eb2F'
-      cUSDCv3 Implementation: '0x89e9b098bb0e3d09f4288fb2b9632B4dcB40bBF6'
+      cUSDCv3 Implementation: '0x4A89F4ff11FB24333e2D235ab1a0D31D3506E6c0'
       cUSDCv3 Ext: '0x220Da2686dC870aC0A97498A1845e610d2f13431'
       Configurator: '0x45939657d1CA34A8FA39A924B71D28Fe8431e581'
       Configurator Implementation: '0x83E0F742cAcBE66349E3701B171eE2487a26e738'
@@ -1656,7 +1678,7 @@ deployments:
       SVR Fee Receiver: '0xb3e79c7cac540ca833015e63d96d3032ba0c4129'
       USDC:
         address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'
-        Price Feed: '0x7e860098F58bBFC8648a4311b374B1D669a2bc6B'
+        Price Feed: '0x3e6D1ccA8Eee6d02f1f578B613374EB53E6823B4'
       cbETH:
         address: '0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22'
         Borrow CF: '80.0%'
@@ -1667,7 +1689,7 @@ deployments:
         Liquidation Penalty Raw: '900000000000000000'
         Supply Cap: '7.50K'
         Supply Cap Raw: '7500000000000000000000'
-        Price Feed: '0x4687670f5f01716fAA382E2356C103BaD776752C'
+        Price Feed: '0x0866Fc8a76BfC485B8E8C7D543A54bd72F015b1C'
       WETH:
         address: '0x4200000000000000000000000000000000000006'
         Borrow CF: '85.0%'
@@ -1678,7 +1700,7 @@ deployments:
         Liquidation Penalty Raw: '950000000000000000'
         Supply Cap: '11.00K'
         Supply Cap Raw: '11000000000000000000000'
-        Price Feed: '0x71041dddad3595F9CEd3DcCFBe3D1F4b0a16Bb70'
+        Price Feed: '0xe6eb5B9b85cFF2C84Df3De6e7855bC9E76f034d5'
       wstETH:
         address: '0xc1CBa3fCea344f92D9239c08C0568f6F2F0ee452'
         Borrow CF: '80.0%'
@@ -1689,7 +1711,7 @@ deployments:
         Liquidation Penalty Raw: '900000000000000000'
         Supply Cap: '3.00K'
         Supply Cap Raw: '3000000000000000000000'
-        Price Feed: '0x4b5DeE60531a72C1264319Ec6A22678a4D0C8118'
+        Price Feed: '0x1738FCAe8D5A6aEf39985dF31Fe60e5Dc5e1a7b3'
       cbBTC:
         address: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf'
         Borrow CF: '80.0%'
@@ -1717,7 +1739,7 @@ deployments:
     blockscan_origin: 'https://basescan.org/'
     contracts:
       cUSDSv3: '0x2c776041CCFe903071AF44aa147368a9c8EEA518'
-      cUSDSv3 Implementation: '0x8c087080253cd3Bd395AEcAF16f36Ee608acd96f'
+      cUSDSv3 Implementation: '0xbF42493f669AD33081cD8e7F9D97B16A1E9C8826'
       cUSDSv3 Ext: '0xaA390749cb758Af4070E93478Fc743c72c18989c'
       Configurator: '0x45939657d1CA34A8FA39A924B71D28Fe8431e581'
       Configurator Implementation: '0x83E0F742cAcBE66349E3701B171eE2487a26e738'
@@ -1759,7 +1781,7 @@ deployments:
     blockscan_origin: 'https://basescan.org/'
     contracts:
       cWETHv3: '0x46e6b214b524310239732D51387075E0e70970bf'
-      cWETHv3 Implementation: '0x6B2F857d3F3A32BA7d9Ac46D0AD8E5bd6e2011f1'
+      cWETHv3 Implementation: '0xE9d8e504f4Ce350FD5517EbD7fF62D6E2D3dd74A'
       cWETHv3 Ext: '0xbd4CfC08d64a848A9116A92Cd06D2f2bDC0a2505'
       Configurator: '0x45939657d1CA34A8FA39A924B71D28Fe8431e581'
       Configurator Implementation: '0x83E0F742cAcBE66349E3701B171eE2487a26e738'
@@ -1931,7 +1953,7 @@ deployments:
     blockscan_origin: 'https://arbiscan.io/'
     contracts:
       cUSDCv3: '0x9c4ec768c28520B50860ea7a15bd7213a9fF58bf'
-      cUSDCv3 Implementation: '0x3410F05Fb77715AC1d1eC68A8D74F38D0850d54c'
+      cUSDCv3 Implementation: '0xc994502eDe8c1e211BF2219555ac3130D5E97746'
       cUSDCv3 Ext: '0x95DeDD64b551F05E9f59a101a519B024b6b116E7'
       Configurator: '0xb21b06D71c75973babdE35b49fFDAc3F82Ad3775'
       Configurator Implementation: '0x8495AF03fb797E2965bCB42Cb0693e1c15614798'
@@ -1945,7 +1967,7 @@ deployments:
       SVR Fee Receiver: '0xb3e79c7cac540ca833015e63d96d3032ba0c4129'
       USDC:
         address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831'
-        Price Feed: '0x50834F3163758fcC1Df9973b6e91f0F0F0434aD3'
+        Price Feed: '0x880D36763Bb470cd395B7d6c76b50446FA70ACe5'
       ARB:
         address: '0x912CE59144191C1204E64559FE8253a0e49E6548'
         Borrow CF: '70.0%'
@@ -1956,7 +1978,7 @@ deployments:
         Liquidation Penalty Raw: '900000000000000000'
         Supply Cap: '16.00M'
         Supply Cap Raw: '16000000000000000000000000'
-        Price Feed: '0xb2A824043730FE05F3DA2efaFa1CBbe83fa548D6'
+        Price Feed: '0x5998a5C516bD5E479E0B6aa6F243d372730B68d2'
       GMX:
         address: '0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a'
         Borrow CF: '60.0%'
@@ -1978,7 +2000,7 @@ deployments:
         Liquidation Penalty Raw: '930000000000000000'
         Supply Cap: '40.00K'
         Supply Cap Raw: '40000000000000000000000'
-        Price Feed: '0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612'
+        Price Feed: '0xb2988bDAdc45c43e3fE1A728F715E94bee4DB406'
       WBTC:
         address: '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f'
         Borrow CF: '75.0%'
@@ -1989,7 +2011,7 @@ deployments:
         Liquidation Penalty Raw: '900000000000000000'
         Supply Cap: '1.00K'
         Supply Cap Raw: '100000000000'
-        Price Feed: '0xd0C7101eACbB49F3deCcCc166d238410D6D46d57'
+        Price Feed: '0xcc392d2c3b37520e01712320bE331D41F7661013'
       wstETH:
         address: '0x5979D7b546E38E414F7E9822514be443A4800529'
         Borrow CF: '80.0%'
@@ -2050,7 +2072,7 @@ deployments:
     blockscan_origin: 'https://arbiscan.io/'
     contracts:
       cUSDTv3: '0xd98Be00b5D27fc98112BdE293e487f8D4cA57d07'
-      cUSDTv3 Implementation: '0x69Ad47985Da1b3aa3Fa3C1fE642c81C08De21941'
+      cUSDTv3 Implementation: '0x5f86A682B2372b606A2F8eC980Da22F9bBE4c736'
       cUSDTv3 Ext: '0x271A200023c9512d37149dfbb62bf0F62a8D4680'
       Configurator: '0xb21b06D71c75973babdE35b49fFDAc3F82Ad3775'
       Configurator Implementation: '0x8495AF03fb797E2965bCB42Cb0693e1c15614798'
@@ -2147,7 +2169,7 @@ deployments:
     blockscan_origin: 'https://arbiscan.io/'
     contracts:
       cWETHv3: '0x6f7D514bbD4aFf3BcD1140B7344b32f063dEe486'
-      cWETHv3 Implementation: '0x70175d5F312d2ac5B8d71D76C055d1C9f000eBa5'
+      cWETHv3 Implementation: '0x449DCc31af12A59938398B10625933C0cD3A6eDf'
       cWETHv3 Ext: '0x0be923b1716115d742E35Fa359d415598c50510F'
       Configurator: '0xb21b06D71c75973babdE35b49fFDAc3F82Ad3775'
       Configurator Implementation: '0x8495AF03fb797E2965bCB42Cb0693e1c15614798'
@@ -2266,7 +2288,7 @@ deployments:
     blockscan_origin: 'https://lineascan.build/'
     contracts:
       cUSDCv3: '0x8D38A3d6B3c3B7d96D6536DA7Eef94A9d7dbC991'
-      cUSDCv3 Implementation: '0x7e0Df525427874522FB5b711d5F347fac187Af4b'
+      cUSDCv3 Implementation: '0x9FF320C40cc1E54B92012cFAEf3E50f17f26f6Fe'
       cUSDCv3 Ext: '0x841e380e3a98E4EE8912046d69731F4E21eFb1D7'
       Configurator: '0x970FfD8E335B8fa4cd5c869c7caC3a90671d5Dc3'
       Configurator Implementation: '0xdB7EdFa090061D9367CbEAF6bE16ECbDE596676C'
@@ -2318,7 +2340,7 @@ deployments:
     blockscan_origin: 'https://lineascan.build/'
     contracts:
       cWETHv3: '0x60F2058379716A64a7A5d29219397e79bC552194'
-      cWETHv3 Implementation: '0x972B1B7032aa93bF449A899fbF31bb30735a671A'
+      cWETHv3 Implementation: '0xc154Dae5ca28AD1FABf606599B03d23BddaeDC8B'
       cWETHv3 Ext: '0xc8E4c3F58d5FC4409522503927Ecea057EbbA1fc'
       Configurator: '0x970FfD8E335B8fa4cd5c869c7caC3a90671d5Dc3'
       Configurator Implementation: '0xdB7EdFa090061D9367CbEAF6bE16ECbDE596676C'
@@ -2545,7 +2567,7 @@ The network deployment artifacts with contract addresses are available in the [C
 The v3 proxy is the only address to be used to interact with a Compound III instance. It is the first address listed in each of the tabs below. To generate the proper [Comet Interface ABI](/public/files/comet-interface-abi-98f438b.json){:target="_blank"} (`CometInterface.sol`), compile the Comet project using `yarn compile`.
 
 <br />
-> **Note:** The deployment data shown below is sourced from the [compound-docs-aggregator](https://github.com/woof-software/compound-docs-aggregator){:target="_blank"} repository. Data collected on: **2026-02-28 12:34:36.611 UTC**.
+> **Note:** The deployment data shown below is sourced from the [compound-docs-aggregator](https://github.com/woof-software/compound-docs-aggregator){:target="_blank"} repository. Data collected on: **2026-04-13 13:14:36.532 UTC**.
 
 <div id="networks-widget-container"></div>
 
